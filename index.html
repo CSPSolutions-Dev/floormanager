@@ -1,0 +1,3159 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+
+    <title>Floor Manager App</title>
+
+    <script src="scripts/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="css/app.css" type="text/css">
+    <link rel="stylesheet" href="css/kendo.common-office365.min.css">
+    <link rel="stylesheet" href="css/kendo.office365.min.css">
+    <link rel="stylesheet" href="css/kendo.office365.mobile.min.css">
+
+    <script src="scripts/kendo.all.min.js"></script>
+    <script src="scripts/jszip.min.js"></script>
+    <script src="scripts/UTILITY.js"></script>
+    <script src="scripts/jquery.emojiRatings.js"></script>
+
+    <style>
+        html {
+            font-size: 14px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background-color: white;
+            line-height: 1.1;
+        }
+
+
+        @media only screen and (max-height: 800px) {
+            .bgskybar {
+                min-height: 800px !important;
+            }
+        }
+
+        @media only screen and (max-width: 900px) {
+            .RatingButtons {
+                width: 90px !important;
+                font-size: 1em !important;
+            }
+
+            .RatingButtonsClicked {
+                width: 90px !important;
+                font-size: 1em !important;
+            }
+
+            .starInfoContainer {
+                height: 630px !important;
+                width: 95% !important;
+            }
+
+            .imgStarDetails {
+                height: 160px !important;
+                width: 180px !important;
+            }
+
+            .spaceLine {
+                margin-bottom: 5% !important;
+            }
+
+            .spaceLine2 {
+                margin-bottom: 3% !important;
+            }
+
+            .leftTitle {
+                width: 180px !important;
+            }
+
+            .inVenueChartCont {
+                /*height: 300px !important;*/
+            }
+
+            .widget.widget-tile {
+                padding: 8px 10px !important;
+                margin-bottom: 20px !important;
+            }
+        }
+
+        .GenderInActive {
+            border: 1px solid lightgray;
+            background-color: white;
+            width: 34px !important;
+            height: 34px;
+            margin: 2px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .GenderActive {
+            border: 1px solid #076bc4;
+            background: linear-gradient(to right,#1456cc,#73b6f1);
+            width: 34px !important;
+            height: 34px;
+            margin: 2px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .RatedInActive {
+            border: 1px solid lightgray;
+            background-color: white;
+            width: 34px !important;
+            height: 34px;
+            margin: 2px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .RatedActive {
+            border: 1px solid #076bc4;
+            background: linear-gradient(to right,#1456cc,#73b6f1);
+            width: 34px !important;
+            height: 34px;
+            margin: 2px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+
+
+        .inVenueChartCont {
+            max-height: 720px;
+            overflow: scroll;
+            background-color: #e4e4e4;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .inVenueGrid {
+            border-style: none;
+            max-height: 300px !important;
+        }
+
+        .GeneralGrid {
+            max-height: 600px !important;
+        }
+
+        .leftTitle {
+            font-weight: bold;
+            width: 100px;
+            margin-right: 2%;
+        }
+
+        .spaceLine {
+            margin-bottom: 1%;
+        }
+
+        .spaceLine2 {
+            margin-bottom: 2%;
+        }
+
+        .userLevelValueClass {
+            background: -webkit-linear-gradient(left,#1456cc,#6acfff);
+            background: linear-gradient(to right,#1456cc,#6acfff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bolder;
+        }
+
+        .imgStarDetails {
+            height: 100px;
+            width: 100px;
+            margin-right: 2%;
+            border-radius: 10px;
+        }
+
+        .imageGuestCl {
+            border-radius: 50%;
+            width: 45px;
+            display: inline-block;
+            height: 45px;
+            cursor: pointer;
+        }
+
+        .imageEditRating {
+            width: 18px;
+            display: inline-block;
+            height: 18px;
+            cursor: pointer;
+            margin-left: 2px;
+            margin-right: 2px;
+        }
+
+        .vl {
+            border-left: 1px solid black;
+        }
+
+        .Contentcss {
+            padding: 15px;
+        }
+
+        .CSPRefreshGrid {
+            float: right;
+            cursor: pointer;
+            padding: 5px 8px;
+        }
+
+        .rcorners {
+            border-radius: 5px !important;
+        }
+
+        .jqEmojiOut {
+            cursor: pointer;
+            opacity: 0.2;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .jqEmojiIn {
+            cursor: pointer;
+            opacity: 1;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        /*Door Activity CSS */
+        .bgskybar {
+            /*background-image: url(css/images/background_admin@2x.jpg);*/
+            height: 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            min-height: 1024px;
+            background-color: black;
+        }
+
+        .userDetails > img {
+            max-width: 48px;
+            max-height: 48px;
+            border-radius: 50%;
+            float: left;
+            margin-top: 5px;
+        }
+
+        .userDetails {
+            color: white;
+            font-weight: bold;
+            overflow: hidden;
+            margin-bottom: 10px;
+            margin-top: 10px;
+            padding-left: 10px;
+        }
+
+        .userInfo {
+            margin-left: 60px;
+            margin-top: 10px;
+        }
+
+
+        .nextInLine {
+            color: #9a9a9a;
+            margin-bottom: 5px;
+        }
+
+        .search {
+            float: right;
+            border-radius: 10px;
+            margin-right: 10px;
+        }
+
+        .k-autocomplete .k-input, .k-multiselect-wrap, .k-textbox > input {
+            border-radius: 10px !important;
+        }
+
+        .k-list-container.k-state-border-up {
+            border-radius: 10px !important;
+        }
+
+        .k-autocomplete {
+            border-radius: 10px !important;
+        }
+
+        .userInfo .search {
+            margin-left: 0px;
+        }
+
+        .footer {
+            height: 100px;
+            width: 100%;
+            position: fixed;
+            left: 0;
+            bottom: 0;
+        }
+
+        .footerMainContainer {
+            width: 100%;
+            height: 100px;
+            background-color: white;
+            position: fixed;
+            border-style: solid;
+            padding: 10px;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .footerButtons {
+            width: 20%;
+            display: inline-block;
+            margin-left: 5%;
+        }
+
+        .First {
+            margin-left: 0px;
+        }
+
+        .starsOnDoor {
+            width: 100%;
+        }
+
+        .starsOnDoorList {
+            display: inline-flex;
+            list-style: none;
+            padding-left: 0px;
+            -webkit-margin-after: 0px;
+        }
+
+        .starOnDoorImages {
+            max-width: 64px;
+            max-height: 64px;
+            border-radius: 50%;
+            border-color: white;
+            border-style: solid;
+            border-width: 2px;
+            margin-right: 10px;
+        }
+
+        .starsOnDoorListItems {
+            margin-right: 10px;
+        }
+
+        .starInfoContainer {
+            background: white;
+            width: 92%;
+            margin-left: 2.5%;
+            border-radius: 10px;
+            padding: 20px;
+            height: 470px;
+            margin-top: 10px;
+        }
+        /*Star In Venue CSS */
+        .starsInVenueHeader {
+            color: black;
+            font-size: 12pt;
+            margin-bottom: 20px;
+        }
+
+        .ResInVenueHeader {
+            color: black;
+            font-size: 12pt;
+            height: 50px;
+            margin-bottom: 20px;
+        }
+
+        .titleInVenue {
+            font-size: 18px;
+            font-weight: bolder;
+        }
+
+        .DateStyle {
+            font-size: 16px;
+            font-weight: bolder;
+            margin-left: 15%;
+        }
+
+        .userInfo .searchInVenue {
+            float: right;
+            border-radius: 10px;
+        }
+
+
+
+        .filtersCont {
+            margin-left: 60px;
+        }
+
+        .userInfoHeader .searchInVenue {
+            float: right;
+            border-radius: 10px;
+        }
+
+        .photo {
+            width: 80px;
+        }
+
+        .name {
+            display: block;
+        }
+
+        .details {
+            border-bottom-style: solid !important;
+            border-bottom-width: 1px !important;
+        }
+
+        .resDate {
+            color: #105AC5;
+            font-size: large;
+            display: block;
+        }
+
+        .gridName {
+            font-size: large;
+            font-weight: bolder;
+            display: block;
+            color: black;
+        }
+
+        .gridNameGuestGrid {
+            font-size: large;
+            font-weight: bolder;
+            display: block;
+            color: #105AC5;
+        }
+
+        .gridInfo {
+            font-size: small;
+            font-weight: bolder;
+            display: block;
+            color: black;
+        }
+
+        .budgetInfo {
+            font-size: medium;
+            font-weight: bolder;
+            display: block;
+            color: grey;
+        }
+
+
+        .guestListin {
+            font-size: small;
+            display: block;
+            color: black;
+        }
+
+        .gridInfoDate {
+            font-weight: normal;
+            color: grey;
+            font-size: small;
+        }
+
+        .resImages {
+            max-width: 64px;
+            max-height: 64px;
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+        }
+
+        .k-grid-header {
+            display: none;
+            border-style: none;
+        }
+
+        .k-grid tr td {
+            border-width: 0px;
+            border-style: solid;
+            border-color: #c9c9c9;
+        }
+
+        .ratingVal {
+            color: black;
+            float: right;
+            font-size: small;
+            font-weight: normal;
+        }
+
+        .jqEmoji-container {
+            float: right;
+            display: inline;
+            margin-left: 10px;
+        }
+
+        .gridInfoDateinven {
+            color: #105AC5;
+            font-weight: normal;
+            font-size: small;
+        }
+
+        .RatingButtons {
+            background-color: white;
+            color: black;
+            border: 1px solid black;
+            border-radius: 10px;
+            font-size: medium;
+            width: 120px;
+            height: 30px;
+            margin-right: 5px;
+            text-align: center;
+            display: block;
+            padding-top: 5px;
+        }
+
+        .RatingButtonsClicked {
+            background-color: black;
+            color: white !important;
+            border: 1px solid black;
+            border-radius: 10px;
+            font-size: medium;
+            margin-right: 5px;
+            height: 30px;
+            width: 120px;
+            display: block;
+            padding-top: 5px;
+        }
+
+        .ApproveAndRate {
+            background-color: black;
+            color: white !important;
+            border: 1px solid black;
+            border-radius: 10px;
+            font-size: medium;
+            margin-right: 15px;
+            height: 45px;
+            width: 220px;
+            padding-top: 13px;
+        }
+
+        .Dismiss {
+            background-color: white;
+            color: red !important;
+            border: 1px solid red;
+            border-radius: 10px;
+            font-size: medium;
+            margin-right: 5px;
+            height: 36px;
+            width: 140px;
+            padding-top: 9px;
+        }
+
+        .AppearanceButtonsList {
+            list-style: none;
+            display: inline-flex;
+            width: 100%;
+            height: 100%;
+            margin-top: 0px;
+            padding: 0px;
+        }
+
+        .AppareanceButtonsListItems {
+            width: 23%;
+            height: 100%;
+        }
+
+        .ContainerDetailsFirstOption {
+            display: inline-flex;
+            width: 100%;
+            margin-bottom: 2%;
+        }
+
+        .containerDetailsSecondOption {
+            display: inline-flex;
+            width: 100%;
+        }
+
+        .numericDisp {
+            height: 30px;
+            width: 60px;
+            background-color: #f1f1f1;
+            font-weight: bold;
+            text-align: center;
+            border-style: none;
+            margin-right: 50px;
+            border-radius: 10px;
+            font-size: large;
+        }
+
+        .loggedInName {
+            color: white;
+            font-size: 12pt;
+            font-weight: bold;
+            margin-bottom: 0px;
+        }
+
+        .loggedInRole {
+            color: white;
+            font-size: 10pt;
+            margin-bottom: 0px;
+            font-weight: normal;
+        }
+
+        /*LOGIN STYLE*/
+
+        .lbllogin {
+            color: black;
+            font-family: 'Source Sans Pro', sans-serif;
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+
+        input[type="text"], textarea {
+            background-color: white;
+        }
+
+        .inputlogin {
+            border-style: none;
+            border-bottom-style: solid;
+            background-color: white;
+            padding: 0px !important;
+            padding-bottom: 12px !important;
+            padding-top: 10px !important;
+            height: 1.5rem !important;
+        }
+
+        .splash-container {
+            max-width: 501px;
+        }
+
+        .card-border-color-primary {
+            border-top: none !important;
+        }
+
+        .card-border-color {
+            border-top: none !important;
+        }
+
+        .card {
+            border-radius: 10px !important;
+            margin-top: 50px !important;
+        }
+
+        .splash-container.card {
+            height: 400px !important;
+        }
+
+        .login-submit {
+            text-align: center;
+        }
+
+        .btnsubmit {
+            border-color: white;
+            background-color: white;
+            color: black;
+            border-radius: 10px;
+            width: 40% !important;
+            box-shadow: 0px 0px 30px white;
+            height: 35px !important;
+            padding-bottom: 40px !important;
+            text-align: center !important;
+            vertical-align: middle !important;
+            font-weight: 800 !important;
+        }
+
+        .card-header {
+            padding-top: 40px;
+        }
+
+        input:-webkit-autofill {
+            -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+        }
+
+        .unit {
+            font-size: medium;
+        }
+
+        .title {
+            font-size: 1em;
+        }
+
+        .widgetStyle {
+            border-radius: 10px;
+        }
+
+        .col1 {
+            width: 49%;
+            margin-right: 1%;
+        }
+
+        .col2 {
+            width: 32%;
+            margin-right: 1.5%;
+        }
+
+        .largetext {
+            font-weight: bold !important;
+        }
+
+        .chartLeg {
+            border: 1px solid #076bc4;
+            background: linear-gradient(to right,#066fc8,#01a2f1);
+            width: 30px;
+            height: 30px;
+            margin: 2px;
+            border-radius: 90%;
+            box-shadow: 0px 0px 5px #076bc4;
+        }
+
+        .chartLeg2 {
+            border: 1px solid lightgray;
+            background-color: white;
+            width: 30px;
+            height: 30px;
+            margin: 2px;
+            border-radius: 90%;
+            box-shadow: 0px 0px 5px lightgray;
+        }
+
+        .value {
+            font-size: 1em !important;
+            font-weight: bold !important;
+        }
+
+        .name {
+            display: block;
+            font-size: 1em;
+            font-weight: bold;
+        }
+
+        .widget-tile {
+            padding-top: 12px !important;
+        }
+
+        .Chartscontainer {
+            border-color: #86c1f5;
+            color: black;
+            border-width: 0.4px;
+            border-radius: 10px;
+            border-style: double;
+            box-shadow: 0px 0px 5px #4994d6;
+        }
+
+        .averageLabel {
+            color: #979797;
+            font-size: 0.8em !important;
+        }
+
+        .totalLabel {
+            color: #105AC5;
+        }
+
+        .widget-tiles {
+            padding: 10px 20px;
+            margin-bottom: 25px;
+            display: table;
+            width: 100%;
+        }
+
+        .statstitle {
+            color: #105AC5;
+        }
+
+        .main-contentEdit {
+            padding: 20px !important;
+            padding-left: 29px !important;
+        }
+
+        .viewMoreCtn {
+            text-align: center;
+            z-index: 1;
+        }
+
+        .ViewMore {
+            width: 100px;
+            height: 20px;
+            border-radius: 50px;
+            color: #105AC5;
+            background: white;
+            border-style: solid;
+            border-color: white;
+        }
+
+        .number {
+            font-size: 2.3em;
+        }
+
+        .Gradiant {
+            background: -webkit-linear-gradient(left,#1456cc,#6acfff);
+            background: linear-gradient(to right,#1456cc,#6acfff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 1px;
+            border-radius: 5px;
+            background: #d3d3d3;
+            outline: none;
+            opacity: 1;
+            -webkit-transition: .2s;
+            transition: opacity .2s;
+        }
+
+            .slider:hover {
+                opacity: 1;
+            }
+
+            .slider::-webkit-slider-thumb {
+                -webkit-appearance: none;
+                appearance: none;
+                width: 25px;
+                height: 25px;
+                border-radius: 50%;
+                background: linear-gradient(to right,#1456cc,#73b6f1);
+                cursor: pointer;
+            }
+
+            .slider::-moz-range-thumb {
+                width: 25px;
+                height: 25px;
+                border-radius: 50%;
+                background: #4CAF50;
+                cursor: pointer;
+            }
+
+        .userInfoSettings {
+            margin-left: 120px;
+            margin-top: 36px;
+        }
+
+        .userDetailsSettings > img {
+            border-radius: 50%;
+            float: left;
+            margin-top: 5px;
+            max-width: 128px;
+            max-height: 128px;
+            height: 100px;
+            width: 100px;
+        }
+
+        .userDetailsSettings {
+            color: black;
+            font-weight: bold;
+            overflow: hidden;
+            margin-bottom: 40px;
+            margin-top: 10px;
+            margin-left: 30px;
+        }
+
+        .userSettings {
+            margin-left: 30px;
+            margin-bottom: 40px;
+        }
+    </style>
+
+
+</head>
+<body>
+    <input type="hidden" id="hf_SiteUrl" value="https://skybarstar.com/">
+
+
+    <div>
+        <script id="Login" type="text/x-kendo-template">
+            <!-- Here goes the html -->
+            <div id="LoginDiv" class="be-splash-screen  bgskybar">
+                <div class="be-wrapper be-login">
+                    <div class="be-content">
+                        <div class="main-contentEdit container-fluid">
+                            <div class="splash-container">
+                                <div style="width:100%;text-align:center;margin-bottom: 25px;">
+                                    <img src="css/images/Skybar_login_logo_gold.png">
+                                </div>
+                                <div style="width:100%;text-align:center;">
+                                    <label style="color:#c5c5c5;font-size:x-large;">FLOOR MANAGEMENT</label>
+                                </div>
+
+                                <div class="card card-border-color card-border-color-primary">
+                                    <div class="card-header"></div>
+                                    <div class="card-body">
+                                        <input name="__RequestVerificationToken" type="hidden" value="y0Il7_gAxjBCT33Drcnj05P8GSQGiWSL2vyttwZsscsC5q40K8zQ5F5WTGOk-o7HZH8gZsxcxnogbFHtNzs-dR98zr2VOE9fyFaHtev9JBE1">
+                                        <div class="form-group">
+                                            <label class="lbllogin">Enter your Sky Management Email</label>
+                                            <input autocomplete="off" class="form-control inputlogin" data-val="true" data-val-email="The Email field is not a valid e-mail address." data-val-required="The Email field is required." id="userName" name="userName" placeholder="Email" type="text" value="">
+
+                                        </div>
+                                        <div class="form-group" style="margin-top:40px !important">
+                                            <label class="lbllogin">Enter password provided by management</label>
+                                            <input class="form-control inputlogin " data-val="true" data-val-required="The Password field is required." id="password" name="password" placeholder="Password" type="password">
+
+                                            <span class="text-danger" id="ErrorMessage" style="display:none">Invalid Email or password</span>
+                                        </div>
+                                        <div class="form-group row login-tools">
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group login-submit" style="margin-top:10px"><input type="button" onclick="UserLogin()" value="SIGN IN" class="btn btn-xl btnsubmit"></div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </script>
+        <script type="text/javascript">
+            function GetTime(itemID){
+                var currentDate = new Date();
+                //kendo.toString(kendo.parseDate(DateRequested, 'yyyy-MM-dd HH:mm:ss'), 'ddd dd MMM, yyyy')
+                var DateFormatted = kendo.toString(currentDate, 'dd-MMM-yyyy hh:mm tt');
+
+                $("#"+ itemID ).text(DateFormatted);
+            }
+            function UserLogin(){
+                debugger;
+                $.support.cors = true;
+                $("#ErrorMessage").hide();
+                var n=$("#userName").val(),t=$("#password").val();
+
+                $.ajax({
+                    type:"GET",
+                    dataType: "json",
+                    url: url_Login + "?userName=" + n + "&password=" + t,
+                    success: function (userInfo) {
+                        debugger;
+                        if (userInfo != null && userInfo != false) {
+                            $("#userName").val("");
+                            $("#password").val("");
+                            Logged_UserInfo = userInfo;
+                            MobileSessionID = userInfo.MobileSessionID;
+                            $("#footerCtn").show();
+                            gotoView('StarInVenue');
+                        }
+                        else {
+                            $("#ErrorMessage").show();
+                        }
+                    },
+                    error: function () {
+
+                        kendo.alert("Error");
+                    }
+                });
+
+            }
+
+            var SiteUrl=$("#hf_SiteUrl").val(),url_Login=SiteUrl+"StaffAppService/IsValidMobileStaffUser";
+
+            LoginNamespace={init:function(){},viewModel:function(){return kendo.observable({isVisible:!0})}};
+
+        </script>
+
+        <script id="billInfoListViewTemplate" type="text/x-kendo-template">
+            <div style="border-bottom-style:solid;padding-bottom:10px;border-bottom-width: 1px;border-bottom-color:\#c9c9c9;">
+                <span style="font-size:14px;font-weight:bold;" id="billInfo_#:User_ID#">#:Quantity# #:ItemName#</span>
+                <span style="float:right;color:grey">#:ItemPrice#</span>
+            </div>
+            <br />
+        </script>
+
+
+
+        <script id="StarInVenue" type="text/x-kendo-template">
+            <!-- Here goes the html -->
+            <div id="StarInVenueDiv" class="Contentcss">
+
+                <div id="UserDetailsDivInVenue" class="starsInVenueHeader">
+                    <div id="userInfoDivInVenue" class="userInfoHeader">
+                        <label class="titleInVenue">Star In Venue</label>
+                        <label class="DateStyle" id="currentTimeLbl"></label>
+                        <input type="text"
+                               id="searchTextBoxInVenue"
+                               class="searchInVenue"
+                               placeholder="Search"
+                               data-role="autocomplete"
+                               data-Text-Field="FullName"
+                               data-value-field="User_ID"
+                               data-bind="source:starsInVenueFilteredByName,
+                            events: {
+                              select: onSelect
+                            }" />
+                    </div>
+                </div>
+                <div style="margin-left:20px;margin-bottom:20px;margin-top:20px;">
+                    <div style="display:inline-block;width:30%">
+                        <button type="button" id="AllStarsBtn" style="margin-right: 15px !important;" class="GenderActive" onclick="FilterInvenueGrid(this,null)"> </button><span style="font-size:large;vertical-align:7px;">All Stars</span>
+                    </div>
+                    <div style="display:inline-block;width:30%">
+                        <button type="button" id="OnBarBtn" style="margin-left: 20px !important;margin-right: 15px !important;" class="GenderInActive" onclick="FilterInvenueGrid(this,1)"> </button> <span style="font-size:large;vertical-align:7px;">On Bar</span>
+                    </div>
+                    <div style="display:inline-block;width:30%">
+                        <button type="button" id="TableReservationBtn" style="margin-left: 20px !important;margin-right: 15px !important;" class="GenderInActive" onclick="FilterInvenueGrid(this,2)"> </button> <span style="font-size:large;vertical-align:7px;">Table Reservation</span>
+                    </div>
+                </div>
+                <div style="margin-left:20px;margin-bottom:20px">
+                    <div style="display:inline-block;width:30%">
+                        <button type="button" id="AllStarsRatingBtn" style="margin-right: 15px !important;" class="RatedActive" onclick="FilterInVenueGridByRated(this,null)"> </button><span style="font-size:large;vertical-align:7px;">All</span>
+                    </div>
+                    <div style="display:inline-block;width:30%">
+                        <button type="button" id="RatedStarsBtn" style="margin-left: 20px !important;margin-right: 15px !important;" class="RatedInActive" onclick="FilterInVenueGridByRated(this,true)"> </button> <span style="font-size:large;vertical-align:7px;">Rated</span>
+                    </div>
+                    <div style="display:inline-block;width:30%">
+                        <button type="button" id="NotRatedStarsBtn" style="margin-left: 20px !important;margin-right: 15px !important;" class="RatedInActive" onclick="FilterInVenueGridByRated(this,false)"> </button> <span style="font-size:large;vertical-align:7px;">Not Rated</span>
+                    </div>
+                </div>
+
+                <div class="fontuseSansProSemiBold inVenueChartCont">
+
+                    <div class="main-contentEdit container-fluid">
+
+                        <div class="row">
+                            <div class="col1" style="margin-bottom:8px;">
+                                <label class="totalLabel statstitle"> View Stats</label>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col1">
+                                <div class="widget widget-tile widgetStyle" style="background: linear-gradient(to right,#0b399b,#076bc4);color:white;padding-bottom:0px !important">
+                                    <table style="width:100%">
+                                        <tr>
+                                            <td style="width:50%">
+                                                <div class="title">Bar Consumption</div>
+                                            </td>
+                                        </tr>
+                                        <tr style="padding-bottom:0px !important;">
+                                            <td>
+                                                <img height="42" width="70" src="css/images/bar_bg.png" />
+                                            </td>
+                                            <td style="float:right;margin-bottom:10px;vertical-align:top">
+                                                <div class="data-info">
+                                                    <div class="value">
+                                                        <span class="unit">AED</span> <span id="BarConsumptionTotal_Lbl" class="number"> </span>
+                                                    </div>
+                                                    <div id="BarConsumptionAvg_Lbl" class="desc averageLabel" style="color:white">Average AED 0</div>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                    </table>
+
+                                </div>
+                            </div>
+                            <div class="col1">
+                                <div class="widget widget-tile widgetStyle" style="background: linear-gradient(to right,#0b399b,#076bc4);color:white;padding-bottom:0px !important">
+                                    <table style="width:100%">
+                                        <tr>
+                                            <td style="width:50%">
+                                                <div class="title">Table Consumption</div>
+                                            </td>
+                                        </tr>
+                                        <tr style="padding-bottom:0px !important;">
+                                            <td>
+                                                <img height="42" width="70" src="css/images/table_bg.png" />
+                                            </td>
+                                            <td style="float:right;margin-bottom:10px;vertical-align:top">
+                                                <div class="data-info">
+                                                    <div class="value">
+                                                        <span class="unit">AED</span> <span id="TableConsumptionTotal_Lbl" class="number"> 0</span>
+                                                    </div>
+                                                    <div id="TableConsumptionAvg_Lbl" class="desc averageLabel" style="color:white">Average AED 0</div>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col2">
+                                <div class="widget widget-tile Chartscontainer">
+                                    <table style="width:100%">
+                                        <tr>
+                                            <td>
+                                                <div class="title">Guests</div>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+
+                                            <td style="float:right">
+                                                <div class="data-info">
+
+                                                    <div class="value">
+                                                        <span id="Guests_Lbl" class="number totalLabel largetext"> 0</span>
+                                                    </div>
+                                                    <div id="AverageGuests_Lbl" class="desc averageLabel">Average 0</div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col2">
+                                <div class="widget widget-tile Chartscontainer">
+
+                                    <table style="width:100%">
+                                        <tr>
+                                            <td>
+                                                <div class="title">Bar Visitors</div>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+
+                                            <td style="float:right">
+                                                <div class="data-info">
+
+                                                    <div class="value">
+                                                        <span id="BarVisitors_Lbl" class="number totalLabel largetext"> 0</span>
+                                                    </div>
+                                                    <div id="AverageBarVisitors_Lbl" class="desc averageLabel">Average 0</div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col2" style="margin-right:0px;">
+                                <div class="widget widget-tile Chartscontainer">
+
+                                    <table style="width:100%">
+                                        <tr>
+                                            <td>
+                                                <div class="title">Tables Reserved</div>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+
+                                            <td style="float:right">
+                                                <div class="data-info">
+
+                                                    <div class="value">
+                                                        <span id="TablesReserved_Lbl" class="number totalLabel largetext"> 0</span>
+                                                    </div>
+                                                    <div id="AverageTablesReserved_Lbl" class="desc averageLabel">Average 0</div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row viewMoreCtn" id="ViewMoreRow">
+                            <div style="width:100%">
+                                <button type="button" id="ViewMoreBtn" class="ViewMore" onclick="ShowHideStatistics(true)">View More</button>
+                            </div>
+                        </div>
+
+                        <div class="row" id="chartsRow" style="display:none">
+                            <div class="col1">
+                                <div class="widget widget-tile Chartscontainer" style="padding-top:6px !important">
+                                    <table style="width:100%">
+                                        <tr>
+                                            <td>
+                                                <div style="font-size:large;">Money Spent On Stars</div>
+                                            </td>
+                                            <td style="float:right">
+                                                <div class="data-info">
+                                                    <div class="value">
+                                                        <span class="unit largetext" style="font-size: smaller;">AED</span> <span id="MoneySpentOnStars_Lbl" class="number largetext" style="font-size: smaller;"><b>0</b> </span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr style="margin-top:10px">
+                                            <td colspan="2">
+                                                <div id="MoneySpentOnStars" style="width:300px;height: 200px;"></div>
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                </div>
+                            </div>
+                            <div class="col1">
+                                <div class="widget widget-tile Chartscontainer" style="padding-top:6px !important">
+                                    <table style="width:100%">
+                                        <tr>
+                                            <td>
+                                                <div style="font-size:large;">Consumption by Stars</div>
+                                            </td>
+                                            <td style="float:right">
+                                                <div class="data-info">
+                                                    <div class="value">
+                                                        <span class="unit largetext" style="font-size: smaller;">AED</span> <span id="Consumption_Lbl" class="number largetext" style="font-size: smaller;"> 0</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div>
+
+                                                    <div id="ConsumptionChart" style="height:200px;width:200px"></div>
+                                                </div>
+                                            </td>
+                                            <td style="float:right; margin-top: 50%">
+                                                <table>
+                                                    <tr>
+                                                        <td>
+                                                            <div style="display:block">
+                                                                <span>
+                                                                    Free Consumption
+                                                                </span>
+                                                                <br />
+                                                                <span id="FreeConsumption_Lbl" class="largetext" style="display:block;text-align:right">
+                                                                    AED 0
+                                                                </span>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class=" chartLeg ">
+
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <div>
+                                                                <br />
+                                                                <span>
+                                                                    Paid Consumption
+                                                                </span>
+                                                                <br />
+                                                                <span class="largetext" id="PaidConsumption_Lbl" style="display:block;text-align:right">
+                                                                    AED 0
+                                                                </span>
+                                                            </div>
+                                                        </td>
+                                                        <td rowspan="2">
+                                                            <div class="chartLeg2">
+
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+
+                                    </table>
+
+                                    <div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row" id="AvgRow" style="display:none">
+                            <div class="col2">
+                                <div class="widget widget-tile Chartscontainer">
+                                    <table style="width:100%">
+                                        <tr>
+                                            <td>
+                                                <div class="title">Avg Consumption of stars</div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="float:right">
+                                                <div class="data-info">
+
+                                                    <div class="value">
+                                                        <span class="totalLabel unit">AED</span> <span id="AverageConsumptionPerStars_Lbl" class="number totalLabel largetext">0 </span>
+                                                    </div>
+                                                </div>
+                                            </td>
+
+                                        </tr>
+                                    </table>
+
+                                </div>
+                            </div>
+                            <div class="col2">
+                                <div class="widget widget-tile Chartscontainer">
+
+                                    <table style="width:100%">
+                                        <tr>
+                                            <td>
+                                                <div class="title">Avg Consumption on bar</div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="float:right">
+                                                <div class="data-info">
+
+                                                    <div class="value">
+                                                        <span class="totalLabel unit">AED</span> <span id="AverageConsumptionOnBar_Lbl" class="number totalLabel largetext">0 </span>
+                                                    </div>
+                                                </div>
+                                            </td>
+
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="col2" style="margin-right:0px;">
+                                <div class="widget widget-tile Chartscontainer">
+
+                                    <table style="width:100%">
+                                        <tr>
+                                            <td>
+                                                <div class="title">Avg Consumption On Tables</div>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+
+                                            <td style="float:right">
+                                                <div class="data-info">
+
+                                                    <div class="value">
+                                                        <span class="totalLabel unit">AED</span> <span id="AverageConsumptionOnTable_Lbl" class="number totalLabel largetext">0</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row viewMoreCtn" id="ViewLessRow" style="display:none">
+                            <div style="width:100%">
+                                <button type="button" id="ViewLessBtn" class="ViewMore" onclick="ShowHideStatistics(false)">View Less</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="example">
+                    <div class="demo-section k-content wide">
+                        <div>
+                            <div data-role="grid"
+                                 data-editable="false"
+                                 id="StarsInVenueGrid"
+                                 data-columns="[{}, {}]"
+                                 data-bind="source: starsInVenueFilteredByName,
+                                 visible: isVisible,"
+                                 data-row-template="StarsInVenueGridTemplate"
+                                 style="border-style:none;height:400px;">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </script>
+
+
+
+        <script type="text/javascript">
+
+            var  starInVenueReservationTypeFilter = null;
+            var FilterRated = null;
+            var reservationTypeFilter=null;
+
+            function numberWithCommas(n) {
+
+                var parts = n.toString().split(".");
+
+                return parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",") + (parts[1] ? "." + parts[1] : "");
+
+
+            }
+            function FilterReservationsGrid(element, value) {
+
+
+                $(".GenderActive").addClass("GenderInActive");
+                $(".GenderActive").removeClass("GenderActive");
+                $(element).addClass("GenderActive");
+                reservationTypeFilter = value;
+
+                $("#ReservationsGrid").data("kendoGrid").dataSource.read();
+
+            }
+
+            function FilterInvenueGrid(element, value) {
+
+                $(".GenderActive").addClass("GenderInActive");
+                $(".GenderActive").removeClass("GenderActive");
+                $(element).addClass("GenderActive");
+
+                starInVenueReservationTypeFilter = value;
+
+                $("#StarsInVenueGrid").data("kendoGrid").dataSource.read();
+
+            }
+
+            function FilterInVenueGridByRated(element, value) {
+
+
+                $(".RatedActive").addClass("RatedInActive");
+                $(".RatedActive").removeClass("RatedActive");
+                $(element).addClass("RatedActive");
+
+                FilterRated = value;
+
+                $("#StarsInVenueGrid").data("kendoGrid").dataSource.read();
+
+            }
+
+            function ShowHideStatistics(show) {
+                if (show){
+                    $("#chartsRow").show();
+                    $("#AvgRow").show();
+                    $("#ViewLessRow").show();
+                    $("#ViewMoreRow").hide();
+
+
+
+                }
+                else {
+                    $("#chartsRow").hide();
+                    $("#AvgRow").hide();
+                    $("#ViewLessRow").hide();
+                    $("#ViewMoreRow").show();
+                }
+
+            }
+
+
+            function OpenStarDetailsPage(n){
+                debugger;
+                VisitID=n;
+
+                gotoView("StarInVenueDetails");
+
+            }
+            var SiteUrl=$("#hf_SiteUrl").val(),url_GetAvailableUsers=SiteUrl+"StaffAppService/GetAvailableUsers";
+            var url_GetMonthlyConsumptions =  SiteUrl+"StaffAppService/GetMonthlyConsumptions";
+            var url_GetStarStatistics = SiteUrl+"StaffAppService/GetStarStatistics";
+            StarInVenueNamespace={
+                init:function(){
+
+                    getStarStatistics();
+                    GetTime("currentTimeLbl");
+
+                    window.setInterval(function () {
+                        GetTime("currentTimeLbl");
+                    }, 20000);
+
+                },
+                viewModel:function(){
+                    return kendo.observable({isVisible:!0,StarInVenueSource:new kendo.data.DataSource({transport:{read:{url:url_GetAvailableUsers+"?MobileSessionID="+ MobileSessionID,dataType:"json"},parameterMap:function(n,t){return t=="read"&&(n.starName="",n.statusTypeId=LocationStatusTypeIDEnum.AtSkybarVenue),n}},schema:{model:{id:"ID",fields:{ID:{type:"string",editable:!1,defaultValue:"00000000-0000-0000-0000-000000000000"},FirstName:{type:"string"},MiddleName:{type:"string"},LastName:{type:"string"},DOB:{type:"date"},Email:{type:"string"},Mobile:{type:"string"},DateCreated:{type:"date"},UserTypeID:{type:"number"},Address:{type:"string"},Phone:{type:"string"},AddressLocationMap:{type:"string"},ASP_User_ID:{type:"string"},UserApprovalStatus_ID:{type:"number"},DateVisited:{type:"date"},NumberOfGuests_Arrived:{type:"number"},Reservation_ID:{type:"string"},VisitNote:{type:"string"},CompanyLocation_ID:{type:"string"},VisitType:{type:"string"},EventName:{type:"string"},NumberOfGuests_Reserved:{type:"number"},Reservation_Note:{type:"string"},ReservationStatus_ID:{type:"string"},ReservationStatus:{type:"string"},DiscountProvided:{type:"number"},TotalPaid:{type:"number"},TotalBillValue:{type:"number"},DateRated:{type:"date"},Promotion:{type:"number"},Crowd:{type:"number"},AddedValue:{type:"number"},VisitRatingValue:{type:"number"},VisitType_ID:{type:"number"},User_ID:{type:"string"},ReservationType_ID:{type:"number"},ReservationType:{type:"string"},FullName:{type:"string"},UserLevel:{type:"string"},UserLevelType_ID:{type:"number"},UserRatingValue:{type:"number"},ReservationPercentage:{type:"number"},VisitTime:{type:"Date"},ProfileImageName:{},BarDiscount:{type:"number"},TableDiscount:{type:"number"},TotalSpent:{type:"number"},TotalConsumption:{type:"number"},TotalConsumptionPerTimeFrame:{type:"number"},TotalStarVisitsPerTimeFrame:{type:"number"},TotalStarVisits:{type:"number"},Gender:{type:"string"},Company:{type:"string"},JobTitle:{type:"string"},PhoneCode:{type:"number"},Facebook_Friends:{type:"number"},Facebook_Friends_Unit:{type:"number"},Facebook_UnitSymbol:{type:"string"},Instagram_Followers:{type:"number"},Instagram_Followers_Unit:{type:"number"},Instagram_UnitSymbol:{type:"string"},Linkedin_Connections:{type:"number"},Linkedin_Connections_Unit:{type:"number"},Linkedin_UnitSymbol:{type:"string"},UserTotalVisits:{}}}}}),
+                        starsInVenueFilteredByName: new kendo.data.DataSource({
+                            schema:{
+                                model:{
+                                    id:"User_ID",
+                                    fields:{
+                                        User_ID:{type:"string"},
+                                        FullName:{type:"string"}
+                                    }
+                                }
+                            },
+                            batch:!1,
+                            serverFiltering:!0,
+                            transport:{
+                                read:{
+                                    url:url_GetAvailableUsers+"?MobileSessionID=" + MobileSessionID,
+                                    dataType:"json"},
+                                parameterMap:function(n,t){
+                                    return t=="read"&&(n.starName=$("#searchTextBoxInVenue").val(),n.statusTypeId=LocationStatusTypeIDEnum.AtSkybarVenue,n.ReservationTypeID = starInVenueReservationTypeFilter,n.FilterRated = FilterRated),n
+                                }
+                            }
+                        }),
+                        onSelect: function (e) {
+
+                            if (e.dataItem.User_ID != null && e.dataItem.User_ID != "") {
+
+                                $("#StarsInVenueGrid").data("kendoGrid").dataSource.read();
+                            }
+                            else {
+                                console.log("No Items Selected");
+                            }
+
+                        },
+                    })}};
+
+
+
+
+            function getStarStatistics(){
+
+                $.ajax({
+                    type:"GET",
+                    url:url_GetStarStatistics+ "?MobileSessionID="+ MobileSessionID,
+                    datatype:JSON,
+                    success:function(n){
+                        debugger;
+                        $("#BarConsumptionTotal_Lbl").text(numberWithCommas(n.BarConsumption));
+                        $("#BarConsumptionAvg_Lbl").text("Average AED "+ numberWithCommas(n.AverageBarConsumption));
+                        $("#TableConsumptionTotal_Lbl").text(numberWithCommas(n.TableConsumption));
+                        $("#TableConsumptionAvg_Lbl").text("Average AED "+ numberWithCommas(n.AverageTableConsumption));
+                        $("#Guests_Lbl").text(numberWithCommas(n.Guests));
+                        $("#AverageGuests_Lbl").text("Average "+numberWithCommas(n.AverageGuests));
+                        $("#BarVisitors_Lbl").text(n.TotalBarReservationsInVenue+"/"+numberWithCommas(n.BarVisitors));
+                        $("#AverageBarVisitors_Lbl").text("Average "+numberWithCommas(n.AverageBarVisitors));
+                        $("#TablesReserved_Lbl").text(n.TotalTableReservationsInVenue+"/"+numberWithCommas(n.TablesReserved));
+                        $("#AverageTablesReserved_Lbl").text("Average "+numberWithCommas(n.AverageTablesReserved));
+                        $("#AverageConsumptionPerStars_Lbl").text(numberWithCommas(n.AverageConsumptionPerGuest.toFixed(0)));
+                        $("#AverageConsumptionOnBar_Lbl").text(numberWithCommas(n.AverageConsumptionPerBarGuest.toFixed(0)));
+                        $("#AverageConsumptionOnTable_Lbl").text(numberWithCommas(n.AverageConsumptionPerTableGuest.toFixed(0)));
+                        $("#MoneySpentOnStars_Lbl").text(numberWithCommas(n.FreeConsumption));
+                        $("#Consumption_Lbl").text(numberWithCommas(n.TotalConsumption));
+                        $("#FreeConsumption_Lbl").text(numberWithCommas("AED "+n.FreeConsumption));
+                        $("#PaidConsumption_Lbl").text(numberWithCommas("AED "+n.PaidConsumption));
+                        InitializeMoneySpentOnStarsChart(n.FreeConsumption,n.TotalConsumption,n.PaidConsumption);
+                    },
+                    error:function(){
+
+                    }
+                })
+
+            }
+            function InitializeMoneySpentOnStarsChart(FreeConsumption,TotalConsumption,PaidConsumption) {
+
+
+                var data = [
+
+                 {
+                     "ConsumptionType": "FreeConsumption",
+                     "ConsumptionValue": (FreeConsumption * 100 / TotalConsumption).toFixed(2)
+
+                 },
+                {
+                    "ConsumptionType": "PaidConsumption",
+                    "ConsumptionValue": (PaidConsumption * 100 / TotalConsumption).toFixed(2)
+
+                },
+
+                ];
+
+                $("#MoneySpentOnStars").kendoChart({
+                    dataSource: {
+                        transport: {
+                            read: {
+                                url: url_GetMonthlyConsumptions + "?MobileSessionID="+ MobileSessionID,
+                                dataType: "json"
+                            },
+                            parameterMap: function(options, operation){
+
+                                return options;
+
+                            },
+                        }
+                    },
+
+                    legend: {
+                        visible: false,
+                    },
+                    seriesDefaults: {
+                        type: "line",
+
+                    },
+                    series: [{
+                        field: "FreeConsumption",
+                        categoryField: "MonthName",
+                        name: "Money Spent On Stars",
+                        color: "#105AC5"
+                    }],
+                    valueAxis: {
+                        line: {
+                            visible: false
+                        },
+                        majorGridLines: {
+                            visible: false
+                        },
+                        title: {
+                            text: "Amount in AED",
+                            font: "bold 12px sans-serif",
+
+                        },
+                    },
+                    categoryAxis: {
+                        labels: {
+                            rotation: -90
+                        },
+                        crosshair: {
+                            visible: true
+                        },
+                        majorGridLines: {
+                            visible: false
+                        },
+
+                        labels: {
+                            color: "#105AC5",
+                        }
+
+                    },
+                    tooltip: {
+                        visible: true,
+                        format: "{0}"
+                    }
+                });
+
+
+                $("#ConsumptionChart").kendoChart({
+                    dataSource: {
+                        data: data,
+                    },
+                    title: {
+                        text: ""
+                    },
+                    legend: {
+                        visible: false
+                    },
+                    seriesDefaults: {
+                        type: "pie",
+                        labels: {
+                            template: "#=value#%",
+                            visible: false,
+                            background: "transparent",
+                            font: "bold 10px sans-serif",
+                        }
+
+                    },
+
+                    series: [{
+                        type: "pie",
+                        field: "ConsumptionValue",
+                        categoryField: "ConsumptionType",
+                        border: {
+                            color: "#E0E0E0",
+                            width: 2,
+                            opacity: 0.5
+                        }
+                    }],
+                    seriesColors: ["#0876d4", "#ffffff"],
+
+                    tooltip: {
+                        visible: false,
+                        format: "{0}"
+                    }
+                });
+
+            }
+
+        </script>
+        <script id="StarsInVenueGridTemplate" type="text/x-kendo-template">
+            <tr data-uid="#: uid #">
+                <td class="photo" style="border-color:transparent;">
+                    <img class="resImages" src="#=SiteUrl#StaffAppService/GetImage?imagekey=#:ProfileImageName#&MobileSessionID= #=MobileSessionID#" />
+                </td>
+                <td class="details">
+                    <span class="gridName" onclick="OpenStarDetailsPage('#:ID#')">
+                        #:FullName#
+
+                        # var FloorRatingValue = 0; #
+
+                        # if(VisitRating.length > 0) {#
+
+                        # var FloorVisitRating = $.grep(VisitRating, function (e) { return e.UserTypeID == 5 });#
+
+                        # if (FloorVisitRating.length > 0) {#
+
+                        # var FloorRatingValue = (FloorVisitRating[0].StarAppearance + FloorVisitRating[0].GuestAppearance)/2;#
+
+                        #}#
+
+                        #}#
+                        # if(FloorRatingValue != 0) {#
+
+                        <span class="jqEmoji-container">
+                            <span class="#if(FloorRatingValue >= 1 ) {# jqEmojiIn  #} else {# jqEmojiOut  #}#" id="ratingStar_0" data-index="0">⭐</span>
+                            <span class="#if(FloorRatingValue >= 2 ) {# jqEmojiIn  #} else {# jqEmojiOut  #}#" id="ratingStar_1" data-index="1">⭐</span>
+                            <span class="#if(FloorRatingValue >= 3 ) {# jqEmojiIn  #} else {# jqEmojiOut  #}#" id="ratingStar_2" data-index="2">⭐</span>
+                            <span class="#if(FloorRatingValue >= 4) {# jqEmojiIn  #} else {# jqEmojiOut  #}#" id="ratingStar_3" data-index="3">⭐</span>
+                            <span class="#if(FloorRatingValue >= 5 ) {# jqEmojiIn  #} else {# jqEmojiOut  #}#" id="ratingStar_4" data-index="4">⭐</span>
+                            <span class="ratingVal">Rated</span>
+                            <span><img src="css/images/edit.png" class="imageEditRating"></span>
+                        </span>
+                        #}else {#
+
+                        <span class="jqEmoji-container">
+                            <span class="jqEmojiOut" id="ratingStar_0" data-index="0" style="color:grey">⭐</span>
+                            <span class="jqEmojiOut" id="ratingStar_1" data-index="1" style="color:grey">⭐</span>
+                            <span class="jqEmojiOut" id="ratingStar_2" data-index="2" style="color:grey">⭐</span>
+                            <span class="jqEmojiOut" id="ratingStar_3" data-index="3">⭐</span>
+                            <span class="jqEmojiOut" id="ratingStar_4" data-index="4">⭐</span>
+                            <span class="ratingVal">Rate Star</span>
+                        </span>
+
+                        #}#
+
+                        <span class="ratingVal"> #:FloorRatingValue.toFixed(2) # </span>
+
+                        <!--<span class="ratingVal"> #:(UserRatingValue == null) ? '0.00' : UserRatingValue.toFixed(2) # </span>-->
+                    </span>
+                    # var numberOfGuestInVenue = $.grep(GuestList, function (e) { return e.GuestLocationStatusTypeId == 2 }); #
+
+                    <span class="gridInfo">
+                        SKY #:UserLevel#  #:(ReservationType_ID == null) ? '' : '- ' + ReservationType + ' Reservation'# - #:NumberOfGuests# Guests (  #: numberOfGuestInVenue.length # in venue)
+
+                    </span>
+                    # var vDate = kendo.parseDate(DateVisited)#
+                    # var visitDate = new Date(vDate.getTime() + vDate.getTimezoneOffset()*60000);#
+                    <span class="gridInfoDateinven"> #:(DateVisited == null) ? '' : 'Arrived at ' + kendo.toString(visitDate, 'hh:mm tt') # </span>
+                    <div>
+                        # var discountPercentage=0;#
+                        # var difference=0;#
+                        # if(TotalBillValue != null && TotalPaid!=null && TotalBillValue!=0 && TotalPaid!=0 ) {#
+                        #difference=TotalBillValue-TotalPaid;#
+                        # discountPercentage=((difference/TotalBillValue)*100).toFixed(0);#
+                        #} else {#
+                        #TotalBillValue=0;#
+                        #TotalPaid=0;#
+                        #}#
+                        <div style="display:inline-block;width:30%">
+                            <span class="gridInfo" style="font-weight:normal;">
+
+                                #if(BillPaid) {#
+
+                                Tab Closed
+
+                                #}else {#
+
+                                Tab Open
+
+                                #}#
+
+                            </span>
+                            <span class="gridInfo">
+                                <span style="display:inline-block;">
+                                    AED
+                                </span>
+                                <span class="gridName" style="display:inline-block;">
+                                    #:(TotalBillValue == null) ? '0.00' : numberWithCommas(TotalBillValue.toFixed(2)) #
+                                </span>
+                            </span>
+                        </div>
+                        <div style="display:inline-block;width:30%">
+                            <span class="gridInfo">#:discountPercentage# % Discount Total</span>
+                            <span class="gridInfo">
+                                <span style="display:inline-block;color:\#1456cc">
+                                    AED
+                                </span>
+                                <span class="gridName Gradiant" style="display:inline-block;"> #:(TotalPaid == null) ? '0.00' : numberWithCommas(TotalPaid.toFixed(2)) # </span>
+                            </span>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+
+        </script>
+
+        <script id="GuestListGridTemplate" type="text/x-kendo-template">
+            <tr data-uid="#: uid #">
+                <td class="photo" style="vertical-align:top;border-bottom-style: solid !important;border-bottom-width: 1px !important;">
+                    <img class="resImages" src="#=SiteUrl#StaffAppService/GetImage?imagekey=#:ProfileImageName#&MobileSessionID= #=MobileSessionID#" />
+                </td>
+                <td class="details">
+                    <span class="gridNameGuestGrid" style="margin-bottom:5px">
+                        #:FullName# &nbsp;
+                        <span class="vl"> &nbsp;</span>
+                        <span style="font-weight:normal"> #:GuestList.length# Guests</span>
+
+                        # var numberOfGuestInVenue = $.grep(GuestList, function (e) { return e.GuestLocationStatusTypeId == 2 }); #
+
+                        <span style="font-weight:normal;color:\#808080"> #: numberOfGuestInVenue.length # in venue</span>
+                    </span>
+                    # if (GuestList.length > 0) {#
+                    <!--<span class="gridInfo">-->
+                    # for (var i = 0; i < GuestList.length; i++) {#
+                    # var guestId = GuestList[i].ID; #
+                    # var locationStatus = GuestList[i].GuestLocationStatusTypeId; #
+
+                    <span class="guestListin">
+                        <div style="display: inline-block;border-radius:50%;">
+
+
+
+                            #if (locationStatus == 2 ) {#
+                            <!--<img width="20" height="20" src="css/images/Success_logo.png" class="imageGuestCl" onclick="UpdateGuestLocationStatus('#:guestId#','#:locationStatus#')" />-->
+
+                            <img src="css/images/select_small.png" class="imageGuestCl">
+
+                            <!--<div class="imageGuestCl" ></div>-->
+                            #} else {#
+
+
+                            <!--<img width="20" height="20" src="" class="imageGuestCl" onclick="UpdateGuestLocationStatus('#:guestId#','#:locationStatus#')" />-->
+
+                            <img src="css/images/deselect_small.png" class="imageGuestCl">
+                            <!--<div class="divGuestCl" onclick="UpdateGuestLocationStatus('#:guestId#','#:locationStatus#')"></div>-->
+                            #}#
+                        </div>
+                        <span class="guestName">#:GuestList[i].GuestFullName#</span>
+                    </span>
+                    #}#
+                    <!--</span>-->
+                    #}#
+                </td>
+            </tr>
+
+        </script>
+
+        <script type="text/javascript">
+
+
+            var SiteUrl=$("#hf_SiteUrl").val();
+            var url_GetAvailableUsers=SiteUrl+"StaffAppService/GetAvailableUsers";
+            var url_UpdateGuestLocationStatus = SiteUrl+"StaffAppService/UpdateStarGuestLocationStatus";
+            url_GetAllReservationsAndVisitGuests=SiteUrl+"StaffAppService/GetAllReservationsAndVisitGuests";
+            var SelectedUserID = null;
+            GuestListNamespace={
+
+                init:function(){
+
+                    SelectedUserID = null;
+
+                    GetTime("currentTimeLbl");
+
+                    window.setInterval(function () {
+                        GetTime("currentTimeLbl");
+                    }, 20000);
+
+                },
+                viewModel:function(){
+                    return kendo.observable({
+                        isVisible:!0,
+                        GuestListByReservation:new kendo.data.DataSource({
+                            transport:{
+                                read:{
+                                    url:url_GetAllReservationsAndVisitGuests+"?MobileSessionID="+ MobileSessionID,
+                                    dataType:"json",
+                                    complete: function(e){
+                                        var TotalGuests = 0;
+                                        var TotalGuestsInVenue = 0;
+
+                                        var data = e.responseJSON;
+                                        for (var i = 0; i < data.length; i++) {
+
+                                            if(data[i].GuestList.length >0){
+                                                TotalGuests =  TotalGuests + data[i].GuestList.length;
+
+                                                var numberOfGuestInVenue = $.grep(data[i].GuestList, function (e) { return e.GuestLocationStatusTypeId == 2 });
+
+                                                TotalGuestsInVenue = TotalGuestsInVenue + numberOfGuestInVenue.length;
+
+                                            }
+
+                                        }
+                                        $("#TotalGuestsInVenueLbl").text(TotalGuestsInVenue + " /");
+                                        $("#TotalGuestsLbl").text(TotalGuests);
+
+                                    }
+                                },
+                                parameterMap:
+                                    function(n,t){
+                                        if(t == "read"){
+                                            debugger;
+
+                                            n.starName=$("#searchTextBoxGuestList").data("kendoAutoComplete").value();
+
+                                            //n.userID= SelectedUserID;
+
+                                        }
+
+                                        return n ;
+                                    }
+                            },
+                            serverFiltering:!0,
+                            schema:{
+                                model:{
+                                    id:"ID",
+                                    fields:{
+                                        ID:{type:"string"},
+                                        FirstName:{type:"string"},
+                                        MiddleName:{type:"string"},
+                                        LastName:{type:"string"},
+                                        DOB:{type:"date"},
+                                        Email:{type:"string"},
+                                        Mobile:{type:"string"},
+                                        DateVisited:{type:"date"},
+                                        DateRequested:{type:"date"},
+                                        NumberOfGuestReserved:{type:"number"},
+                                        NumberOfGuestVisitors:{type:"number"},
+                                        ReservationStatus_ID:{type:"string"},
+                                        ReservationType_ID:{type:"number"},
+                                        TypeName:{type:"string"},
+                                        FullName:{type:"string"},
+                                        Level:{type:"string"},
+                                        UserLevelType_ID:{type:"number"},
+                                        Company:{type:"string"},
+                                        JobTitle:{type:"string"},
+                                        User_ID:{type:"string"},
+                                        ProfileImageName:{type:"string"},
+                                        PhoneCode:{type:"string"},
+                                        UserRatingValue:{type:"number"}
+                                    }
+                                }
+                            }
+                        }),
+
+                        onSelect:function(n){
+
+                            // if ( n.dataItem.User_ID!=null && n.dataItem.User_ID!=""){
+                            // console.log(n.dataItem.User_ID);
+                            // SelectedUserID = n.dataItem.User_ID;
+                            $("#GuestListGrid").data("kendoGrid").dataSource.read();
+
+                            //  }
+                            //else {
+                            //console.log("No Items Selected");
+                            //  SelectedUserID = null;
+                            //}
+
+                        }
+                    })
+                }
+            };
+
+            function UpdateGuestLocationStatus(guestID, locationStatus) {
+                console.log(guestID);
+                console.log(locationStatus);
+
+                if (locationStatus == 2) {
+                    locationStatus = 1;
+                }
+
+                else {
+                    locationStatus = 2;
+                }
+
+                $.ajax({
+                    type:"POST",
+                    url:url_UpdateGuestLocationStatus + "?MobileSessionID="+MobileSessionID,
+                    data:{guestId:guestID, guestStatusID:locationStatus},
+                    dataType:"json",
+                    success:function(){
+                        ReloadKendoGrid('GuestListGrid');
+                        // $("#starDetailsContainer").hide();
+                        //$("#starsOnDoorList").data("kendoListView").dataSource.read();
+                    }
+                });
+
+            }
+
+        </script>
+
+        <script id="GuestList" type="text/x-kendo-template">
+            <!-- Here goes the html -->
+            <div id="GuestListDiv" class="Contentcss">
+
+                <div id="GuestListDetailsDiv" class="starsInVenueHeader">
+                    <div id="GuestListInfoDiv" class="userInfoHeader">
+                        <label class="titleInVenue">Guest List</label>
+                        <label class="DateStyle" id="currentTimeLbl" style="margin-left:20%;"></label>
+                        <input type="text"
+                               id="searchTextBoxGuestList"
+                               class="searchInVenue"
+                               placeholder="Search"
+                               data-role="autocomplete"
+                               data-Text-Field="FullName"
+                               data-value-field="User_ID"
+                               data-bind="source:GuestListByReservation,
+                            events: {
+                              change:onSelect,
+                            }" />
+                    </div>
+                </div>
+                <div style="text-align:right; margin-bottom: 20px;color:black;" class="DateStyle">
+                    <span>
+                        Guests:
+                    </span>
+                    <span id="TotalGuestsInVenueLbl">
+                        0/
+                    </span>
+                    <span id="TotalGuestsLbl">
+                        0
+                    </span>
+                </div>
+                <div id="example">
+                    <div class="demo-section k-content wide">
+                        <div>
+                            <div data-role="grid"
+                                 id="GuestListGrid"
+                                 data-editable="false"
+                                 data-columns="[{}, {}]"
+                                 data-bind="source: GuestListByReservation,
+                                     visible: isVisible,"
+                                 data-row-template="GuestListGridTemplate"
+                                 style="border-style:none;height:800px;">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </script>
+
+        <script id="Reservations" type="text/x-kendo-template">
+            <!-- Here goes the html -->
+            <div id="ReservationsDiv" class="Contentcss">
+                <div id="UserDetailsDivInVenue" class="ResInVenueHeader" style="height: 90px;">
+                    <div id="userInfoDivReservations" class="userInfoHeader">
+                        <label class="titleInVenue">Reservations</label>
+                        <label class="DateStyle" id="currentTimeLbl"></label>
+                        <input type="text"
+                               id="searchTextBoxReservations"
+                               class="searchInVenue"
+                               placeholder="Search"
+                               data-role="autocomplete"
+                               data-Text-Field="FullName"
+                               data-value-field="User_ID"
+                               data-bind="source:ReservationsSource,
+                            events: {
+                              select: onSelect1,
+
+                            }" />
+                    </div>
+                    <div class="starsInVenueHeader" style="margin-top: 20px;">
+                        <button type="button" id="ReservationsAllStarsBtn" style="margin-right: 15px !important;" class="GenderActive" onclick="FilterReservationsGrid(this,null)"> </button><span style="font-size:large;vertical-align:7px;">All Stars</span>
+                        <button type="button" id="ReservationsOnBarBtn" style="margin-left: 20px !important;margin-right: 15px !important;" class="GenderInActive" onclick="FilterReservationsGrid(this,1)"> </button> <span style="font-size:large;vertical-align:7px;">On Bar</span>
+                        <button type="button" id="ReservationsTableReservationBtn" style="margin-left: 20px !important;margin-right: 15px !important;" class="GenderInActive" onclick="FilterReservationsGrid(this,2)"> </button> <span style="font-size:large;vertical-align:7px;">Table Reservation</span>
+                        <button type="button" id="ReservationsWalkinReservationBtn" style="margin-left: 20px !important;margin-right: 15px !important;" class="GenderInActive" onclick="FilterReservationsGrid(this,3)"> </button> <span style="font-size:large;vertical-align:7px;">Walk-in</span>
+
+                    </div>
+                </div>
+                <div class="fontuseSansProSemiBold inVenueChartCont">
+
+                    <div class="main-contentEdit container-fluid">
+
+                        <div class="row">
+                            <div class="col1" style="margin-bottom:8px;">
+                                <label class="totalLabel statstitle"> View Stats</label>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col1">
+                                <div class="widget widget-tile widgetStyle" style="background: linear-gradient(to right,#0b399b,#076bc4);color:white;padding-bottom:0px !important">
+                                    <table style="width:100%">
+                                        <tr>
+                                            <td style="width:50%">
+                                                <div class="title">Bar Consumption</div>
+                                            </td>
+                                        </tr>
+                                        <tr style="padding-bottom:0px !important;">
+                                            <td>
+                                                <img height="42" width="70" src="css/images/bar_bg.png" />
+                                            </td>
+                                            <td style="float:right;margin-bottom:10px;vertical-align:top">
+                                                <div class="data-info">
+                                                    <div class="value">
+                                                        <span class="unit">AED</span> <span id="BarConsumptionTotal_Lbl" class="number"> </span>
+                                                    </div>
+                                                    <div id="BarConsumptionAvg_Lbl" class="desc averageLabel" style="color:white">Average AED 0</div>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                    </table>
+
+                                </div>
+                            </div>
+                            <div class="col1">
+                                <div class="widget widget-tile widgetStyle" style="background: linear-gradient(to right,#0b399b,#076bc4);color:white;padding-bottom:0px !important">
+                                    <table style="width:100%">
+                                        <tr>
+                                            <td style="width:50%">
+                                                <div class="title">Table Consumption</div>
+                                            </td>
+                                        </tr>
+                                        <tr style="padding-bottom:0px !important;">
+                                            <td>
+                                                <img height="42" width="70" src="css/images/table_bg.png" />
+                                            </td>
+                                            <td style="float:right;margin-bottom:10px;vertical-align:top">
+                                                <div class="data-info">
+                                                    <div class="value">
+                                                        <span class="unit">AED</span> <span id="TableConsumptionTotal_Lbl" class="number"> 0</span>
+                                                    </div>
+                                                    <div id="TableConsumptionAvg_Lbl" class="desc averageLabel" style="color:white">Average AED 0</div>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col2">
+                                <div class="widget widget-tile Chartscontainer">
+                                    <table style="width:100%">
+                                        <tr>
+                                            <td>
+                                                <div class="title">Guests</div>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+
+                                            <td style="float:right">
+                                                <div class="data-info">
+
+                                                    <div class="value">
+                                                        <span id="Guests_Lbl" class="number totalLabel largetext"> 0</span>
+                                                    </div>
+                                                    <div id="AverageGuests_Lbl" class="desc averageLabel">Average 0</div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col2">
+                                <div class="widget widget-tile Chartscontainer">
+
+                                    <table style="width:100%">
+                                        <tr>
+                                            <td>
+                                                <div class="title">Bar Visitors</div>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+
+                                            <td style="float:right">
+                                                <div class="data-info">
+
+                                                    <div class="value">
+                                                        <span id="BarVisitors_Lbl" class="number totalLabel largetext"> 0</span>
+                                                    </div>
+                                                    <div id="AverageBarVisitors_Lbl" class="desc averageLabel">Average 0</div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col2" style="margin-right:0px;">
+                                <div class="widget widget-tile Chartscontainer">
+
+                                    <table style="width:100%">
+                                        <tr>
+                                            <td>
+                                                <div class="title">Tables Reserved</div>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+
+                                            <td style="float:right">
+                                                <div class="data-info">
+
+                                                    <div class="value">
+                                                        <span id="TablesReserved_Lbl" class="number totalLabel largetext"> 0</span>
+                                                    </div>
+                                                    <div id="AverageTablesReserved_Lbl" class="desc averageLabel">Average 0</div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row viewMoreCtn" id="ViewMoreRow">
+                            <div style="width:100%">
+                                <button type="button" id="ViewMoreBtn" class="ViewMore" onclick="ShowHideStatistics(true)">View More</button>
+                            </div>
+                        </div>
+
+                        <div class="row" id="chartsRow" style="display:none">
+                            <div class="col1">
+                                <div class="widget widget-tile Chartscontainer" style="padding-top:6px !important">
+                                    <table style="width:100%">
+                                        <tr>
+                                            <td>
+                                                <div style="font-size:large;">Money Spent On Stars</div>
+                                            </td>
+                                            <td style="float:right">
+                                                <div class="data-info">
+                                                    <div class="value">
+                                                        <span class="unit largetext" style="font-size: smaller;">AED</span> <span id="MoneySpentOnStars_Lbl" class="number largetext" style="font-size: smaller;"><b>0</b> </span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr style="margin-top:10px">
+                                            <td colspan="2">
+                                                <div id="MoneySpentOnStars" style="width:300px;height: 200px;"></div>
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                </div>
+                            </div>
+                            <div class="col1">
+                                <div class="widget widget-tile Chartscontainer" style="padding-top:6px !important">
+                                    <table style="width:100%">
+                                        <tr>
+                                            <td style="width:80%">
+                                                <div style="font-size:large;">Consumption by Stars</div>
+                                            </td>
+                                            <td style="float:right">
+                                                <div class="data-info">
+                                                    <div class="value">
+                                                        <span class="unit largetext" style="font-size: smaller;">AED</span> <span id="Consumption_Lbl" class="number largetext" style="font-size: smaller;"> 0</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div>
+
+                                                    <div id="ConsumptionChart" style="height:200px;width:200px"></div>
+                                                </div>
+                                            </td>
+                                            <td style="float:right; margin-top: 50%">
+                                                <table>
+                                                    <tr>
+                                                        <td>
+                                                            <div style="display:block">
+                                                                <span>
+                                                                    Free Consumption
+                                                                </span>
+                                                                <br />
+                                                                <span id="FreeConsumption_Lbl" class="largetext" style="display:block;text-align:right">
+                                                                    AED 0
+                                                                </span>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class=" chartLeg ">
+
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <div>
+                                                                <br />
+                                                                <span>
+                                                                    Paid Consumption
+                                                                </span>
+                                                                <br />
+                                                                <span class="largetext" id="PaidConsumption_Lbl" style="display:block;text-align:right">
+                                                                    AED 0
+                                                                </span>
+                                                            </div>
+                                                        </td>
+                                                        <td rowspan="2">
+                                                            <div class="chartLeg2">
+
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row" id="AvgRow" style="display:none">
+                            <div class="col2">
+                                <div class="widget widget-tile Chartscontainer">
+                                    <table style="width:100%">
+                                        <tr>
+                                            <td>
+                                                <div class="title">Avg Consumption of stars</div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="float:right">
+                                                <div class="data-info">
+
+                                                    <div class="value">
+                                                        <span class="totalLabel unit">AED</span> <span id="AverageConsumptionPerStars_Lbl" class="number totalLabel largetext">0 </span>
+                                                    </div>
+                                                </div>
+                                            </td>
+
+                                        </tr>
+                                    </table>
+
+                                </div>
+                            </div>
+                            <div class="col2">
+                                <div class="widget widget-tile Chartscontainer">
+
+                                    <table style="width:100%">
+                                        <tr>
+                                            <td>
+                                                <div class="title">Avg Consumption on bar</div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="float:right">
+                                                <div class="data-info">
+
+                                                    <div class="value">
+                                                        <span class="totalLabel unit">AED</span> <span id="AverageConsumptionOnBar_Lbl" class="number totalLabel largetext">0 </span>
+                                                    </div>
+                                                </div>
+                                            </td>
+
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="col2" style="margin-right:0px;">
+                                <div class="widget widget-tile Chartscontainer">
+
+                                    <table style="width:100%">
+                                        <tr>
+                                            <td>
+                                                <div class="title">Avg Consumption On Tables</div>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+
+                                            <td style="float:right">
+                                                <div class="data-info">
+
+                                                    <div class="value">
+                                                        <span class="totalLabel unit">AED</span> <span id="AverageConsumptionOnTable_Lbl" class="number totalLabel largetext">0</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row viewMoreCtn" id="ViewLessRow" style="display:none">
+                            <div style="width:100%">
+                                <button type="button" id="ViewLessBtn" class="ViewMore" onclick="ShowHideStatistics(false)">View Less</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="ReservationGridContainer">
+                    <div class="demo-section k-content wide">
+                        <div>
+                            <div id="ReservationsGrid"
+                                 data-role="grid"
+                                 data-editable="false"
+                                 data-columns="[ {}, {}]"
+                                 data-bind="source: ReservationsSource,
+                            visible: isVisible,"
+                                 data-row-template="ReservationGridTemplate"
+                                 style="border-style:none;height:480px;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </script>
+        <script type="text/javascript">
+
+            var SiteUrl=$("#hf_SiteUrl").val(),url_GetReservations=SiteUrl+"StaffAppService/GetAllReservations";
+            ReservationsNamespace={
+                init:function(){
+                    getStarStatistics();
+                    GetTime("currentTimeLbl");
+
+                    window.setInterval(function () {
+                        GetTime("currentTimeLbl");
+                    }, 20000);
+
+                },
+                viewModel:function(){
+                    return kendo.observable({
+                        isVisible:!0,
+                        ReservationsSource:new kendo.data.DataSource({
+                            transport:{
+                                read:{
+                                    url:url_GetReservations+"?MobileSessionID="+ MobileSessionID,
+                                    dataType:"json"
+                                },
+                                parameterMap:function(n,t){
+                                    return t=="read"&&(
+                                        n.starName=$("#searchTextBoxReservations").val(),n.userID=$("#searchTextBoxReservations").data("kendoAutoComplete").value(),n.reservationTypeFilter=reservationTypeFilter),n}},
+                            serverFiltering:true,
+                            schema:{
+                                model:{
+                                    id:"ID",
+                                    fields:{
+                                        ID:{type:"string"},
+                                        FirstName:{type:"string"},
+                                        MiddleName:{type:"string"},
+                                        LastName:{type:"string"},
+                                        DOB:{type:"date"},
+                                        Email:{type:"string"},
+                                        Mobile:{type:"string"},
+                                        DateVisited:{type:"date"},
+                                        DateRequested:{type:"date"},
+                                        NumberOfGuestReserved:{type:"number"},
+                                        NumberOfGuestVisitors:{type:"number"},
+                                        ReservationStatus_ID:{type:"string"},
+                                        ReservationType_ID:{type:"number"},
+                                        TypeName:{type:"string"},
+                                        FullName:{type:"string"},
+                                        Level:{type:"string"},
+                                        UserLevelType_ID:{type:"number"},
+                                        Company:{type:"string"},
+                                        JobTitle:{type:"string"},
+                                        User_ID:{type:"string"},
+                                        ProfileImageName:{type:"string"},
+                                        PhoneCode:{type:"string"},
+                                        UserRatingValue:{type:"number"},
+                                        ReservationAccessCode:{type:"string"},
+                                        ZoneName: { type: "string" },
+                                        ZoneDescription: { type: "string" },
+                                        Budget: { type: "number" },
+                                    }
+                                }
+                            }
+                        }),
+
+                        onSelect1:function(n){
+                            n.dataItem.User_ID!=null&&n.dataItem.User_ID!=""?$("#ReservationsGrid").data("kendoGrid").dataSource.read():console.log("No Items Selected")}})}};
+        </script>
+        <script id="ReservationGridTemplate" type="text/x-kendo-template">
+
+            <tr data-uid="#: uid #">
+                <td class="photo" style="border-color:transparent;">
+                    <img class="resImages" src="#=SiteUrl#StaffAppService/GetImage?imagekey=#:ProfileImageName#&MobileSessionID= #=MobileSessionID#" />
+                </td>
+                <td class="details">
+                    <span class="resDate" style="margin-bottom:7px;">
+                        Reservation For #:kendo.toString(kendo.parseDate(DateRequested, 'yyyy-MM-dd HH:mm:ss'), 'ddd dd MMM, yyyy')#
+
+                        # if(UserRatingValue != null) {#
+
+                        <span class="jqEmoji-container">
+                            <span class="#if(UserRatingValue >= 1 ) {# jqEmojiIn  #} else {# jqEmojiOut  #}#" id="ratingStar_0" data-index="0">⭐</span>
+                            <span class="#if(UserRatingValue >= 2 ) {# jqEmojiIn  #} else {# jqEmojiOut  #}#" id="ratingStar_1" data-index="1">⭐</span>
+                            <span class="#if(UserRatingValue >= 3 ) {# jqEmojiIn  #} else {# jqEmojiOut  #}#" id="ratingStar_2" data-index="2">⭐</span>
+                            <span class="#if(UserRatingValue >= 4) {# jqEmojiIn  #} else {# jqEmojiOut  #}#" id="ratingStar_3" data-index="3">⭐</span>
+                            <span class="#if(UserRatingValue >= 5 ) {# jqEmojiIn  #} else {# jqEmojiOut  #}#" id="ratingStar_4" data-index="4">⭐</span>
+                        </span>
+                        #}else {#
+                        <span class="jqEmoji-container">
+                            <span class="jqEmojiOut" id="ratingStar_0" data-index="0">⭐</span>
+                            <span class="jqEmojiOut" id="ratingStar_1" data-index="1">⭐</span>
+                            <span class="jqEmojiOut" id="ratingStar_2" data-index="2">⭐</span>
+                            <span class="jqEmojiOut" id="ratingStar_3" data-index="3">⭐</span>
+                            <span class="jqEmojiOut" id="ratingStar_4" data-index="4">⭐</span>
+                        </span>
+                        #}#
+                        <span class="ratingVal"> #:(UserRatingValue == null) ? '0.00' : UserRatingValue.toFixed(2) # </span>
+                    </span>
+                    <span class="gridName" style="margin-bottom:7px;">
+                        <span>#:FullName#</span>
+                        <span style="margin-left:10px;font-size:medium;font-weight:normal;color:green"> #:(ReservationAccessCode == null) ? '' : 'Code: ' + ReservationAccessCode #</span>
+                    </span>
+
+                    <span class="budgetInfo" style="margin-bottom:7px;">
+                        #:(Budget == null) ? '' :'Budget ' + Budget + ' AED' #
+                        #:(ZoneID == null) ? '' :' in ' + ZoneName  #
+                    </span>
+
+                    <span class="gridInfo" style="margin-bottom:7px;">
+                        # var numberOfGuestInVenue = $.grep(GuestList, function (e) { return e.GuestLocationStatusTypeId == 2 }); #
+
+                        SKY #:Level# - #:TypeName# Reservation - #:GuestList.length# guests
+                        (  #: numberOfGuestInVenue.length # in venue)
+                        # if (UserLocationStatusTypeId == 2 || UserLocationStatusTypeId == 3 ) {#
+                        <span class="gridInfoDate" style="float:right">Arrived <!--at #:kendo.toString(kendo.parseDate(DateVisited, 'yyyy-MM-dd HH:mm:ss'), 'hh:mm tt')#--> </span>
+                        #}else {#
+                        <span class="gridInfoDate" style="float:right">Did Not Arrive</span>
+                        #}#
+                    </span>
+                </td>
+            </tr>
+
+        </script>
+
+        <script id="Settings" type="text/x-kendo-template">
+            <!-- Here goes the html -->
+            <div id="SettingsDiv">
+
+                <div id="UserDetailsDiv" class="userDetailsSettings" style="">
+                    <img id="loggedUserImageSettings">
+                    <div id="userInfoDiv" class="userInfoSettings">
+                        <label id="LoggedUserNameSettings" style="font-size: 14pt;font-weight: bold;margin-bottom: 0px;color:black"></label>
+                        <br />
+                        <label id="loggedUserRoleSettings" style="font-size: 12pt;margin-bottom: 0px;font-weight: normal;"></label>
+                    </div>
+                </div>
+                <div style="background-color:#f5f4f4;width: 100%;padding-top: 60px;height: 900px;">
+
+                    <div class="userSettings">
+                        <a href="#show" style="font-size:medium;color:#1456cc">Push Notifications</a>
+                    </div>
+                    <hr style="margin-left: 1rem; margin-right: 1rem; margin-bottom: 40px;" />
+                    <div class="userSettings">
+                        <img src="css/images/terms.png" height="40" />
+                        <a href="#show" style="font-size:medium;font-weight:bold;color:#1456cc">Terms & Conditions</a>
+                    </div>
+                    <hr style="margin-left: 1rem; margin-right: 1rem; margin-bottom: 40px;" />
+                    <div class="userSettings">
+                        <img src="css/images/logout.png" height="40" />
+                        <a href="#show" style="font-size:medium;font-weight:bold;color:#1456cc" onclick="LogOut()">Sign Out</a>
+                    </div>
+                </div>
+            </div>
+        </script>
+        <script type="text/javascript">
+
+            function FillSettingsUserInfo()
+            {
+
+                if(Logged_UserInfo!=null)
+                {
+                    $("#LoggedUserNameSettings").text(Logged_UserInfo.FirstName+" "+Logged_UserInfo.LastName);
+                    $("#loggedUserImageSettings").attr("src",SiteUrl+"StaffAppService/GetImage?imagekey="+Logged_UserInfo.ProfileImageName +"&MobileSessionID="+ MobileSessionID);
+                    var n=Logged_UserInfo.Roles.split(",");n.length>1&&$("#loggedUserRoleSettings").text(n[1])
+                }
+
+            }
+
+            SettingsNamespace={
+                init:function(){
+                    FillSettingsUserInfo();
+
+                },
+                viewModel:function(){
+                    return kendo.observable({
+                        SettingsSource:new kendo.data.DataSource({
+                            transport:{
+                                read:{
+                                    url:"",
+                                    dataType:"json"
+                                },
+                                update:{
+                                    url:"",
+                                    dataType:"json"
+                                },
+                                parameterMap:function(n,t){
+                                    return t!=="read"&&n.models?{userModel:kendo.stringify(n.models)}:n
+                                }
+                            },
+                            batch:!0,
+                            schema:
+                                {model:{
+                                    id:"Id",
+                                    fields:{}
+                                }
+                                }
+                        })
+                    })
+                }
+            };
+            function LogOut(){
+                $("#footerCtn").hide();
+                gotoView('Login');
+            }
+
+        </script>
+
+        <script id="StarInVenueDetails" type="text/x-kendo-template">
+            <!-- Here goes the html -->
+            <div id="StarInVenueDetailsDiv" class="Contentcss">
+                <div id="starDetailsContainer" class="starInfoContainer">
+
+                    <div style="display:block;margin-bottom:2%;">
+                        <a href="#show" onclick="gotoView('StarInVenue')" style="font-size:20px;"> < </a>
+                        <a href="#show" onclick="gotoView('StarInVenue')">Stars In Venue</a>
+                        <label class="DateStyle" id="currentTimeLbl" style="float: right;margin-right: 10px;"></label>
+                    </div>
+
+                    <div class="ContainerDetailsFirstOption">
+                        <input hidden="hidden" id="StarAppearance_hid" value="" />
+                        <input hidden="hidden" id="GuestAppearance_hid" value="" />
+                        <input hidden="hidden" id="UserID_hid" value="" />
+                        <input hidden="hidden" id="VisitID_hid" value="" />
+                        <img id="starDetailsImage" class="imgStarDetails" />
+                        <div style="display:inline-grid;width:90%">
+                            <span>
+                                <span id="UserFirstNameLabel" style="font-size:large;font-weight:bold">
+                                </span>
+                                <span style="float:right">Checked in at</span>
+                            </span>
+                            <span style="margin-bottom:5px">
+                                <span id="UserLastNameLabel" style="font-size:large;font-weight:bold"></span>
+                                <span id="StarDetailsDateVisited" style="font-weight:bold;float:right">12:14 AM</span>
+                            </span>
+                            <span style="margin-bottom:5px;">
+                                <span>
+                                    <span style="background: -webkit-linear-gradient(left,#1456cc,#6acfff);background: linear-gradient(to right,#1456cc,#6acfff);-webkit-background-clip: text; -webkit-text-fill-color: transparent;">SKY</span>
+                                    <span id="UserLevelValue" class="userLevelValueClass"></span>
+
+                                    <span id="ReportStarCntr" style="float:right">
+                                        <a class="RatingButtons" onclick="ReportStar()" id="ReportStar_Btn" style="color:red;border-color:red;background-color:white;margin-right:0px; width:120px!important;padding-top:7px">REPORT STAR</a>
+                                        <a class="RatingButtons" onclick="RemoveStarReport()" id="CancelReportStar_Btn" style="color:green;border-color:green;background-color:white;margin-right:0px;display:none;width:120px!important;padding-top:7px">CANCEL REPORT</a>
+                                    </span>
+
+                                </span>
+                                <br />
+                                <span>Membership #</span>
+                                <span id="UserMembershipValue"></span>
+                            </span>
+                            <span>
+                                <span>Rating Average</span>
+                                <br />
+                                <span id="UserRatingValue"></span>
+                                <span id="UserRatingStars" style="display: inline;margin-left: 10px;">
+                                    <span class="jqEmojiOut" id="ratingStar_0" data-index="0">⭐</span>
+                                    <span class="jqEmojiOut" id="ratingStar_1" data-index="1">⭐</span>
+                                    <span class="jqEmojiOut" id="ratingStar_2" data-index="2">⭐</span>
+                                    <span class="jqEmojiOut" id="ratingStar_3" data-index="3">⭐</span>
+                                    <span class="jqEmojiOut" id="ratingStar_4" data-index="4">⭐</span>
+                                </span>
+                            </span>
+
+                        </div>
+
+                    </div>
+                    <div class="spaceLine" style="box-shadow: 0px 0px 5px #aebdc9;width:100%;border-style:solid;border-color: #cde0f0;padding: 10px;border-width: 0.5px;border-radius: 10px;">
+                        <div style="width:100%;text-align:center;">
+                            <span class="Gradiant" style="display: block;margin-bottom:5px">Your Reservation</span>
+                            <div>
+                                <span>Table -</span>
+
+                                <span id="numberOFStarGuests"></span>
+
+                                <span id="numberOFStarGuestsInVenue" style="font-weight: bolder;"></span>
+                            </div>
+                        </div>
+                        <hr style="margin-left: 1rem; margin-right: 1rem;" />
+                        <div>
+                            <div style="display:inline-block;width:30%;">
+                            </div>
+                            <div style="display:inline-block;width:20%;">
+                                <span id="TabOpenLabel" class="gridInfo" style="margin-bottom: 5px;font-weight:normal;">
+
+                                </span>
+                                <span class="gridInfo">
+                                    <span style="display:inline-block;">
+                                        AED
+                                    </span>
+                                    <span id="visitTotalValue" class="gridName" style="display:inline-block;">
+
+                                    </span>
+                                </span>
+                            </div>
+
+                            <div style="display:inline-block;width:30%">
+                                <span id="visitDiscountPercentage" class="gridInfo" style="margin-bottom: 5px;"></span>
+                                <span class="gridInfo">
+                                    <span style="display:inline-block;color:#1456cc">
+                                        AED
+                                    </span>
+                                    <span id="VisitTotalPaid" class="gridName Gradiant" style="display:inline-block;"> </span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="containerDetailsSecondOption">
+                        <div style="font-weight:bold;">
+                            Number of guests with stars
+                        </div>
+                    </div>
+                    <div class="containerDetailsSecondOption spaceLine" style="display:block;margin-left: 10px;">
+                        <div class="slidecontainer" style="display: inline-block;width: 80%;">
+                            <input type="range" min="1" max="16" value="1" class="slider" id="NumberOfGuestsNumericSlider" oninput="changeNumberOfGuestsValue(this)">
+                        </div>
+                        <div style="display: inline-block">
+                            <input type="number" id="NumberOfGuestsVisitingNumeric" class="numericDisp" />
+                        </div>
+                    </div>
+                    <div class="containerDetailsSecondOption spaceLine" style="margin-right:50px;">
+                        <div class="leftTitle">
+                            Star Appearance
+                        </div>
+                    </div>
+                    <div class="containerDetailsSecondOption spaceLine" style="margin-right:50px;">
+                        <div class="containerDetailsSecondOption">
+                            <ul id="StarAppeanceButtonsContainer" class="AppearanceButtonsList">
+                                <li class="AppareanceButtonsListItems">
+                                    <a class="RatingButtons" onclick="ChangeStarAppearanceValue(this, 1)" id="StarAppearanceBtn_1">Very Bad</a>
+                                </li>
+                                <li class="AppareanceButtonsListItems">
+                                    <a class="RatingButtons" onclick="ChangeStarAppearanceValue(this, 2)" id="StarAppearanceBtn_2">Bad</a>
+                                </li>
+                                <li class="AppareanceButtonsListItems">
+                                    <a class="RatingButtons" onclick="ChangeStarAppearanceValue(this, 3)" id="StarAppearanceBtn_3">Good</a>
+                                </li>
+                                <li class="AppareanceButtonsListItems">
+                                    <a class="RatingButtons" onclick="ChangeStarAppearanceValue(this, 4)" id="StarAppearanceBtn_4">Very Good</a>
+                                </li>
+                                <li class="AppareanceButtonsListItems">
+                                    <a class="RatingButtons" onclick="ChangeStarAppearanceValue(this, 5)" id="StarAppearanceBtn_5">Outstanding</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="containerDetailsSecondOption spaceLine">
+                        <div class="leftTitle">
+                            Guests Appearance
+                        </div>
+                    </div>
+                    <div class="containerDetailsSecondOption spaceLine">
+                        <div class="containerDetailsSecondOption">
+                            <ul id="GuestAppeanceButtonsContainer" class="AppearanceButtonsList">
+                                <li class="AppareanceButtonsListItems">
+                                    <a class="RatingButtons" onclick="ChangeGuestAppearanceValue(this, 1)" id="GuestAppearanceBtn_1">Very Bad</a>
+                                </li>
+                                <li class="AppareanceButtonsListItems">
+                                    <a class="RatingButtons" onclick="ChangeGuestAppearanceValue(this, 2)" id="GuestAppearanceBtn_2">Bad</a>
+                                </li>
+                                <li class="AppareanceButtonsListItems">
+                                    <a class="RatingButtons" onclick="ChangeGuestAppearanceValue(this, 3)" id="GuestAppearanceBtn_3">Good</a>
+                                </li>
+                                <li class="AppareanceButtonsListItems">
+                                    <a class="RatingButtons" onclick="ChangeGuestAppearanceValue(this, 4)" id="GuestAppearanceBtn_4">Very Good</a>
+                                </li>
+                                <li class="AppareanceButtonsListItems">
+                                    <a class="RatingButtons" onclick="ChangeGuestAppearanceValue(this, 5)" id="GuestAppearanceBtn_5">Outstanding</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="containerDetailsSecondOption spaceLine">
+                        <div style="font-weight:bold;">
+                            Comment To note
+                        </div>
+                    </div>
+                    <div class="containerDetailsSecondOption spaceLine2">
+                        <div style="width:91%">
+                            <textarea id="noteTextArea" rows="2" style="width:100%;border-style:none;border-bottom-style:solid;resize: none;" placeholder="Write Comment here"></textarea>
+                        </div>
+                    </div>
+                    <div class="containerDetailsSecondOption spaceLine2" style="display:block;text-align:center;">
+                        <div style="text-align:center;display:inline-flex;">
+                            <a class="ApproveAndRate" onclick="ApproveAndRateStarVisit()">SUBMIT RATING </a>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </script>
+
+        <script type="text/javascript">
+
+
+
+            var SiteUrl=$("#hf_SiteUrl").val();
+
+            url_GetStarVisitDetails=SiteUrl+"StaffAppService/GetStarVisitDetails";
+
+            var Url_ReportUser = SiteUrl+"StaffAppService/ReportUser";
+
+            var Url_RemoveStarReport = SiteUrl+"StaffAppService/RemoveStarReport";
+
+            var url_RateStarVisit=SiteUrl+"StaffAppService/RateStar";
+
+            StarInVenueDetailsNamespace={
+                init:function(){
+                    GetStarDetails();
+
+                    GetTime("currentTimeLbl");
+
+                    window.setInterval(function () {
+                        GetTime("currentTimeLbl");
+                    }, 20000);
+
+                },
+                viewModel:function(){
+                    return kendo.observable({
+                        isVisible:!0
+                    })
+                }
+            };
+
+
+            function ReportStar() {
+                debugger;
+
+                var userID = $("#UserID_hid").val();
+
+                $.ajax({
+                    type: "POST",
+                    url: Url_ReportUser+ "?MobileSessionID="+MobileSessionID,
+                    data: { userID: userID},
+                    dataType: "json",
+                    success: function (data) {
+
+                        $("#ReportStar_Btn").hide();
+                        $("#CancelReportStar_Btn").show();
+                    }
+                });
+            }
+
+            function RemoveStarReport() {
+                debugger;
+
+                var userID = $("#UserID_hid").val();
+
+                $.ajax({
+                    type: "POST",
+                    url: Url_RemoveStarReport + "?MobileSessionID="+MobileSessionID,
+                    data: { userID: userID },
+                    dataType: "json",
+                    success: function (data) {
+                        $("#CancelReportStar_Btn").hide();
+                        $("#ReportStar_Btn").show();
+                    }
+                });
+            }
+
+
+            function GetStarDetails(){
+                $.ajax({
+                    type:"GET",
+                    url:url_GetStarVisitDetails+ "?MobileSessionID="+ MobileSessionID,
+                    data:{visitID:VisitID},
+                    datatype:JSON,
+                    success:function(n){
+                        debugger;
+
+                        FillStarDetails(n);
+
+
+                    },error:function(){
+                    }
+                })
+            }
+            function changeNumberOfGuestsValue(input) {
+
+                $("#NumberOfGuestsVisitingNumeric").val(input.value);
+            }
+
+            function FillStarDetails(n)
+            {    debugger;
+
+                $("#UserID_hid").val(n.User_ID);
+                $("#VisitID_hid").val(n.ID);
+                $("#starDetailsImage").attr("src", SiteUrl+"StaffAppService/GetImage?imagekey="+n.ProfileImageName + "&MobileSessionID="+ MobileSessionID);
+                $("#UserFirstNameLabel").text(n.FirstName);
+                $("#UserLastNameLabel").text(n.LastName);
+                $("#StarDetailsDateVisited").text(kendo.toString(kendo.parseDate(n.DateVisited,"yyyy-MM-dd HH:mm:ss"),"hh:mm tt"));
+                $("#UserLevelValue").text(n.UserLevel);
+                $("#UserMembershipValue").text(n.StarMembershipSeed);
+
+                if (n.Reported == true)
+                {
+                    $("#CancelReportStar_Btn").show();
+                    $("#ReportStar_Btn").hide();
+                }
+                else
+                {
+                    $("#CancelReportStar_Btn").hide();
+                    $("#ReportStar_Btn").show();
+
+                }
+
+                if(n.BillPaid == true) {
+
+                       $("#TabOpenLabel").text("Tab Closed");
+
+                     }else {
+
+                       $("#TabOpenLabel").text("Tab Open");
+
+                 }
+
+                var numberOfGuests=n.NumberOfGuests_Arrived;
+
+                if(numberOfGuests==null){
+                    numberOfGuests=1;
+                }
+                if(n.VisitRating!=null && n.VisitRating.length>0){
+                    GetStarRatingByType( n.VisitRating,userRatingTypeIDEnum.FloorManager);
+                }
+
+
+                $("#NumberOfGuestsVisitingNumeric").val(numberOfGuests);
+                $("#NumberOfGuestsNumericSlider").val(numberOfGuests);
+
+                var discountPercentage=0;
+                var difference=0;
+                if(n.TotalBillValue != null && n.TotalPaid!=null && n.TotalBillValue!=0 && n.TotalPaid!=0 ) {
+                    difference=n.TotalBillValue-n.TotalPaid;
+                    discountPercentage=((difference/n.TotalBillValue)*100).toFixed(0);
+                } else {
+                    n.TotalBillValue=0;
+                    n.TotalPaid=0;
+                }
+
+                $("#visitTotalValue").text(numberWithCommas(n.TotalBillValue.toFixed(2)));
+                $("#VisitTotalPaid").text(numberWithCommas(n.TotalPaid.toFixed(2)));
+                $("#visitDiscountPercentage").text(discountPercentage+"% Discount Total");
+
+                n.UserRatingValue!=null?$("#UserRatingValue").text(n.UserRatingValue.toFixed(2)):$("#UserRatingValue").text("0.00");
+                if(n.GuestList!=null){
+
+
+                    var numberOfGuestInVenue = $.grep(n.GuestList, function (e) { return e.GuestLocationStatusTypeId == 2 });
+
+                    $("#numberOFStarGuests").text(n.GuestList.length+" Guests |");
+                    $("#numberOFStarGuestsInVenue").text(numberOfGuestInVenue.length+" In Venue");
+                }
+            }
+
+            function GetStarRatingByType(ratingArray,ratingType_ID){
+                debugger;
+                var startRatingArray=  $.grep(ratingArray, function (e) { return e.UserTypeID == ratingType_ID});
+                if(startRatingArray.length>0){
+                    var rating=startRatingArray[0];
+                    if(rating.GuestAppearance>0){
+                        FillRatings("GuestAppearanceBtn",rating.GuestAppearance);
+                        $("#GuestAppearance_hid").val(rating.GuestAppearance);
+                    }
+                    if(rating.StarAppearance>0){
+                        FillRatings("StarAppearanceBtn",rating.StarAppearance);
+                        $("#StarAppearance_hid").val(rating.StarAppearance);
+                    }
+                    $("#noteTextArea").val(rating.Note);
+                }
+
+            }
+            function FillRatings(btnName,rating){
+
+                $("#"+btnName+"_"+rating).addClass("RatingButtonsClicked");
+
+            }
+            function ChangeStarAppearanceValue(n,t){
+                debugger;
+                ChangeStarAppearanceButtonsCSS(n);
+                $("#StarAppearance_hid").val(t);
+            }
+            function ChangeStarAppearanceButtonsCSS(n){
+                $("#StarAppearance_hid").val()!=null&&$("#StarAppearance_hid").val()!=""&&$("#StarAppearanceBtn_"+$("#StarAppearance_hid").val()).removeClass("RatingButtonsClicked");$(n).addClass("RatingButtonsClicked")}
+
+            function ChangeGuestAppearanceValue(n,t){
+                ChangeGuestAppearanceButtonsCSS(n);
+                $("#GuestAppearance_hid").val(t)
+            }
+            function ChangeGuestAppearanceButtonsCSS(n){
+                $("#GuestAppearance_hid").val()!=null&&$("#GuestAppearance_hid").val()!=""&&$("#GuestAppearanceBtn_"+$("#GuestAppearance_hid").val()).removeClass("RatingButtonsClicked");$(n).addClass("RatingButtonsClicked")}
+
+            function ApproveAndRateStarVisit(){
+                debugger;
+                var n=$("#UserID_hid").val(),t=$("#VisitID_hid").val(),i=$("#noteTextArea").val(),r=$("#StarAppearance_hid").val(),u=$("#GuestAppearance_hid").val(),f=$("#NumberOfGuestsVisitingNumeric").val();
+                var userRatingTypeID=userRatingTypeIDEnum.FloorManager;
+
+                $.ajax({
+                    type:"POST",
+                    url:url_RateStarVisit + "?MobileSessionID="+MobileSessionID,
+                    data:{User_ID:n,Visit_ID:t,NumberOfGuests:f,StarAppearance:r,GuestAppearance:u,Note:i,UserRatingTypeID:userRatingTypeID},
+                    dataType:"json",
+                    success:function(){
+                        $("#starDetailsContainer").hide();
+                        gotoView('StarInVenue');
+                    }
+                });
+            }
+
+            function OpenDismissVisitWindow(){
+
+            }
+
+            function DisplayLoggedUserInfo(){
+                if(Logged_UserInfo!=null){
+                    $("#LoggedUserName").text(Logged_UserInfo.FirstName+" "+Logged_UserInfo.LastName);
+                    $("#loggedUserImage").attr("src",SiteUrl+"StaffAppService/GetImage?imagekey="+Logged_UserInfo.ProfileImageName +"&MobileSessionID="+ MobileSessionID);
+                    var n=Logged_UserInfo.Roles.split(",");n.length>1&&$("#loggedUserRole").text(n[1])
+                }
+            }
+
+
+
+            LocationStatusTypeIDEnum=Object.freeze({NoFilter:0,AtHome:1,AtSkybarDoor:2,AtSkybarVenue:3,InTaxi:4,LeftSkybar:5});
+            var userRatingTypeIDEnum = Object.freeze({
+                "StarUser": 1,
+                "StaffApp" : 2,
+                "WebUser" : 3,
+                "DoorManager" : 4,
+                "FloorManager" : 5
+            });
+
+        </script>
+
+        <input id="hf_views" name="hf_views" type="hidden" value="[{&quot;ViewName&quot;:&quot;Login&quot;,&quot;IsDefault&quot;:true},{&quot;ViewName&quot;:&quot;DoorActivity&quot;,&quot;IsDefault&quot;:false}, {&quot;ViewName&quot;:&quot;GuestList&quot;,&quot;IsDefault&quot;:false},{&quot;ViewName&quot;:&quot;StarInVenue&quot;,&quot;IsDefault&quot;:false},{&quot;ViewName&quot;:&quot;Reservations&quot;,&quot;IsDefault&quot;:false},{&quot;ViewName&quot;:&quot;Settings&quot;,&quot;IsDefault&quot;:false},{&quot;ViewName&quot;:&quot;StarInVenueDetails&quot;,&quot;IsDefault&quot;:false}]">
+    </div>
+
+    <div id="app">
+        <div>
+            <header></header><section id="content"></section>
+            <footer class="footer" style="display:none">
+                <div class="footerMainContainer">
+                    <div class="footerButtons First"><a style="cursor:pointer" href="/FloorManager/#show" onclick="gotoView(&quot;StarInVenue&quot;)">Stars In Venue</a></div>
+
+                    <div class="footerButtons"><a style="cursor:pointer" href="/FloorManager/#show" onclick="gotoView(&quot;Reservations&quot;)">Reservations</a></div>
+
+                    <div class="footerButtons">
+                        <a style="cursor:pointer" href="/DoorMan/#show" onclick="gotoView(&quot;GuestList&quot;)">Guest List</a>
+                    </div>
+                    <div class="footerButtons">
+                        <a style="cursor:pointer" href="/FloorManager/#show" onclick="gotoView(&quot;Settings&quot;)">Settings</a>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+    <script type="text/javascript">
+        function storeCurrentView(n){
+            typeof Storage!="undefined"&&sessionStorage.setItem("currentView",n)
+        }
+
+        function getCurrentView(){
+            var n=defaultView;
+            return typeof Storage!="undefined"&&sessionStorage.getItem("currentView")!=null&&(n=sessionStorage.getItem("currentView")),n
+        }
+        function gotoView(n){
+
+                starInVenueReservationTypeFilter = null;
+                FilterRated = null;
+                reservationTypeFilter=null;
+
+
+            $("#btn_" + n).css("color","black");
+
+            if(n ==  "StarInVenue" )
+            {
+                $("#img_" + n).attr('src', 'css/images/starsin_on.png');
+
+                $("#img_Reservations").attr('src', 'css/images/list_off.png');
+                $("#btn_Reservations").css("color","#979797");
+
+                $("#img_GuestList").attr('src', 'css/images/add_off.png');
+                $("#btn_GuestList").css("color","#979797");
+
+                $("#img_Settings").attr('src', 'css/images/setting_off.png');
+                $("#btn_Settings").css("color","#979797");
+            }
+            else if(n ==  "GuestList" )
+            {
+                $("#img_" + n).attr('src', 'css/images/add_on.png');
+
+                $("#img_DoorActivity").attr('src', 'css/images/door_off.png');
+                $("#btn_DoorActivity").css("color","#979797");
+
+                $("#img_Reservations").attr('src', 'css/images/list_off.png');
+                $("#btn_Reservations").css("color","#979797");
+
+                $("#img_Settings").attr('src', 'css/images/setting_off.png');
+                $("#btn_Settings").css("color","#979797");
+            }
+
+            else if (n ==  "Reservations" ){
+                $("#img_" + n).attr('src', 'css/images/list_on.png');
+
+                $("#img_StarInVenue").attr('src', 'css/images/starsin_off.png');
+                $("#btn_StarInVenue").css("color","#979797");
+
+                $("#img_GuestList").attr('src', 'css/images/add_off.png');
+                $("#btn_GuestList").css("color","#979797");
+
+                $("#img_Settings").attr('src', 'css/images/setting_off.png');
+                $("#btn_Settings").css("color","#979797");
+            }
+            else if (n ==  "Settings" ){
+                $("#img_" + n).attr('src', 'css/images/settings_on.png');
+
+                $("#img_StarInVenue").attr('src', 'css/images/starsin_off.png');
+                $("#btn_StarInVenue").css("color","#979797");
+
+                $("#img_GuestList").attr('src', 'css/images/add_off.png');
+                $("#btn_GuestList").css("color","#979797");
+
+                $("#img_Reservations").attr('src', 'css/images/list_off.png');
+                $("#btn_Reservations").css("color","#979797");
+            }
+
+            router.navigate("/"+n)
+        }
+        function ReloadKendoGrid(n){
+            $("#"+n).data("kendoGrid").dataSource.read()
+        }
+        function InitialiazeGridToolTip(n){
+            $(n).kendoTooltip({
+                filter:"th",
+                content:function(n){
+                    var t=n.target;
+                    return $(t).text()
+                }
+            })
+        }
+        var i,defaultScope;
+        UTILITY.InitializeErrorLogging();
+
+        var layout=new kendo.Layout("<header><\/header><section id='content'><\/section>"
+            +"<footer id= 'footerCtn'class='footer' style='display:none;'>"
+            +"<div class='footerMainContainer'>"
+
+            +"<div class='footerButtons First'>"
+            + "<div>"
+            +"<img id='img_StarInVenue' src='css/images/starsin_off.png' style='width:60px;' onclick='gotoView(\"StarInVenue\")'>"
+            +"<\/div>"
+            +"<a  id='btn_StarInVenue' style='cursor:pointer;color:#979797;'  href='#show' onclick='gotoView(\"StarInVenue\")'>"
+            +"Stars In Venue"
+            +"<\/a>"
+            +"<\/div>"
+
+            +"<div class='footerButtons'>"
+            + "<div>"
+            +"<img id='img_Reservations' src='css/images/list_off.png' style='width:60px;' onclick='gotoView(\"Reservations\")'>"
+            +"<\/div>"
+            +"<a id='btn_Reservations' style='cursor:pointer;color:#979797;'  href='#show' onclick='gotoView(\"Reservations\")'>"
+            +"Reservations"
+            +"<\/a>"
+            +"<\/div>"
+
+            + "<div class='footerButtons'>"
+            + "<div>"
+            +"<img id='img_GuestList' src='css/images/add_off.png' style='width:60px;' onclick='gotoView(\"GuestList\")'>"
+            +"<\/div>"
+            +"<a id='btn_GuestList' style='cursor:pointer;color:#979797;'  href='#show' onclick='gotoView(\"GuestList\")'>"
+            +"Guest List"
+            +"<\/a>"
+            +"<\/div>"
+
+            +"<div class='footerButtons'>"
+            + "<div>"
+            +"<img id='img_Settings' src='css/images/setting_off.png' style='width:60px;' onclick='gotoView(\"Settings\")'>"
+            +"<\/div>"
+            +"<a id='btn_Settings' style='cursor:pointer;color:#979797;'  href='#show' onclick='gotoView(\"Settings\")'>"
+            +"Settings"
+            +"<\/a>"
+            +"<\/div>"
+
+            +"<\/div>"
+            +"<\/footer>"
+            );
+
+        var Logged_UserInfo=null,MobileSessionID=null,router=new kendo.Router,viewslist=JSON.parse($("#hf_views").val()),view,defaultView=null,VisitID=null,currentView;for(i=viewslist.length-1;i>=0;i--)router.route("/"+viewslist[i].ViewName,function(){try{var n=router.navigate.arguments[0].replace("/",""),t=window[n+"Namespace"];view=new kendo.View(n,{model:t.viewModel()});layout.showIn("#content",view);storeCurrentView(n);try{t.init()}catch(i){}}catch(i){}}),viewslist[i].IsDefault==!0&&(defaultView=viewslist[i].ViewName);if(defaultView!=null){defaultView=getCurrentView();defaultScope=window[defaultView+"Namespace"];view=new kendo.View(defaultView,{model:defaultScope.viewModel()});layout.showIn("#content",view);try{defaultScope.init()}catch(e){}}else alert("No default view found!");router.bind("init",function(){layout.render($("#app"))});$(function(){router.start()});
+    </script>
+
+
+    <div class="k-list-container k-popup k-group k-reset" id="searchTextBox-list" data-role="popup" aria-hidden="true" style="display: none; position: absolute;"><div class="k-group-header" style="display:none"></div><div class="k-list-scroller" unselectable="on"><ul unselectable="on" class="k-list k-reset" tabindex="-1" aria-hidden="true" id="searchTextBox_listbox" aria-live="polite" data-role="staticlist" role="listbox"></ul></div><div class="k-nodata" style="display:none"><div></div></div></div><div class="k-list-container k-popup k-group k-reset" id="searchTextBoxInVenue-list" data-role="popup" aria-hidden="true" style="display: none; position: absolute;"><div class="k-group-header" style="display:none"></div><div class="k-list-scroller" unselectable="on"><ul unselectable="on" class="k-list k-reset" tabindex="-1" aria-hidden="true" id="searchTextBoxInVenue_listbox" aria-live="polite" data-role="staticlist" role="listbox"></ul></div><div class="k-nodata" style="display:none"><div></div></div></div><div class="k-list-container k-popup k-group k-reset" id="searchTextBoxReservations-list" data-role="popup" aria-hidden="true" style="display: none; position: absolute;"><div class="k-group-header" style="display:none"></div><div class="k-list-scroller" unselectable="on"><ul unselectable="on" class="k-list k-reset" tabindex="-1" aria-hidden="true" id="searchTextBoxReservations_listbox" aria-live="polite" data-role="staticlist" role="listbox"><li tabindex="-1" role="option" unselectable="on" class="k-item" aria-selected="false" data-offset-index="0">Amin James</li></ul></div><div class="k-nodata" style="display:none"><div>No data found.</div></div></div><div class="k-list-container k-popup k-group k-reset" id="searchTextBox-list" data-role="popup" aria-hidden="true" style="display: none; position: absolute;"><div class="k-group-header" style="display:none"></div><div class="k-list-scroller" unselectable="on"><ul unselectable="on" class="k-list k-reset" tabindex="-1" aria-hidden="true" id="searchTextBox_listbox" aria-live="polite" data-role="staticlist" role="listbox"></ul></div><div class="k-nodata" style="display:none"><div></div></div></div>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            try {
+
+                $.support.cors = true;
+
+            } catch (e) {
+
+            }
+
+
+        });
+
+    </script>
+</body>
+</html>
